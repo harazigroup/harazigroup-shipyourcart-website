@@ -1,0 +1,156 @@
+{
+ "home": {
+  "ar": {
+   "title": "Ship Your Cart | الشحن من ماليزيا إلى العالم",
+   "description": "تسوّق من أي متجر في ماليزيا ونحن نستلم ونجمع ونشحن إلى بابك. شحن دولي، تسوّق واشحن، نشتري عنك، وتوفير المنتجات من كوالالمبور."
+  },
+  "ms": {
+   "title": "Ship Your Cart | Penghantaran dari Malaysia ke seluruh dunia",
+   "description": "Beli dari mana-mana kedai di Malaysia, kami terima, gabungkan dan hantar ke pintu anda. Penghantaran antarabangsa, Beli dan Hantar, Beli untuk saya dan sumber produk dari Kuala Lumpur."
+  },
+  "en": {
+   "title": "Ship Your Cart | Shipping from Malaysia to the world, Shop & Ship, sourcing",
+   "description": "Malaysian shipping company in Kuala Lumpur: international shipping to and from Malaysia, Shop & Ship parcel consolidation, buy-for-me service and product sourcing."
+  }
+ },
+ "how-it-works": {
+  "ar": {
+   "title": "كيف نعمل | Ship Your Cart",
+   "description": "خطوات واضحة من طلبك إلى باب بيتك: تواصل، عرض سعر، تجهيز الشحنة، والتوصيل."
+  },
+  "ms": {
+   "title": "Cara ia berfungsi | Ship Your Cart",
+   "description": "Langkah jelas dari pesanan ke pintu anda: hubungi kami, sebut harga, penyediaan dan penghantaran."
+  },
+  "en": {
+   "title": "How it works | Ship Your Cart",
+   "description": "How shipping, Shop & Ship, buy-for-me and sourcing work with Ship Your Cart, step by step."
+  }
+ },
+ "shop-and-ship": {
+  "ar": {
+   "title": "تسوّق واشحن من ماليزيا | Ship Your Cart",
+   "description": "احصل على عنوان في ماليزيا، تسوّق من المتاجر الماليزية ونجمع طلباتك ونشحنها لك في صندوق واحد."
+  },
+  "ms": {
+   "title": "Beli dan Hantar dari Malaysia | Ship Your Cart",
+   "description": "Dapatkan alamat Malaysia, beli dari kedai dalam talian Malaysia dan kami gabungkan pesanan anda dalam satu kotak."
+  },
+  "en": {
+   "title": "Shop & Ship: your Malaysian address and parcel consolidation | Ship Your Cart",
+   "description": "Shop from Malaysian online stores, ship to our Kuala Lumpur address, and we consolidate your orders into one shipment to your country."
+  }
+ },
+ "buy-for-me": {
+  "ar": {
+   "title": "نشتري عنك من ماليزيا | Ship Your Cart",
+   "description": "ما تقدر تشتري من متجر ماليزي؟ أرسل لنا الرابط ونحن نشتري ونستلم ونشحن لك."
+  },
+  "ms": {
+   "title": "Beli untuk saya dari Malaysia | Ship Your Cart",
+   "description": "Tidak dapat beli dari kedai Malaysia? Hantar pautan dan kami beli, terima dan hantar kepada anda."
+  },
+  "en": {
+   "title": "Buy for me: we purchase from Malaysian stores for you | Ship Your Cart",
+   "description": "Can't pay a Malaysian store or get local delivery? Send us the link and we buy, receive and ship the product to you."
+  }
+ },
+ "shipping": {
+  "ar": {
+   "title": "الشحن الدولي من وإلى ماليزيا | Ship Your Cart",
+   "description": "شحن جوي وبحري وسريع من ماليزيا إلى أي دولة ومن العالم إلى ماليزيا، من الباب إلى الباب."
+  },
+  "ms": {
+   "title": "Penghantaran antarabangsa ke dan dari Malaysia | Ship Your Cart",
+   "description": "Penghantaran udara, laut dan ekspres dari Malaysia ke mana-mana negara dan dari dunia ke Malaysia, dari pintu ke pintu."
+  },
+  "en": {
+   "title": "International shipping to and from Malaysia | Ship Your Cart",
+   "description": "Air, sea and express shipping from Malaysia to any country and imports into Malaysia, door to door, for parcels and business cargo."
+  }
+ },
+ "contact": {
+  "ar": {
+   "title": "تواصل معنا | Ship Your Cart",
+   "description": "راسلنا على الواتساب ‎+60 10-707 0190 أو على info@shipyourcart.com.my لعرض سعر للشحن."
+  },
+  "ms": {
+   "title": "Hubungi kami | Ship Your Cart",
+   "description": "WhatsApp +60 10-707 0190 atau e-mel info@shipyourcart.com.my untuk sebut harga penghantaran."
+  },
+  "en": {
+   "title": "Contact Ship Your Cart | WhatsApp +60 10-707 0190",
+   "description": "Contact Ship Your Cart on WhatsApp or email info@shipyourcart.com.my. Office at Publika, Solaris Dutamas, Kuala Lumpur."
+  }
+ },
+ "about": {
+  "ar": {
+   "title": "من نحن | Ship Your Cart",
+   "description": "Ship Your Cart تديرها شركة WIZZ SMART SERVICES SDN. BHD. المسجلة في كوالالمبور، ماليزيا."
+  },
+  "ms": {
+   "title": "Tentang kami | Ship Your Cart",
+   "description": "Ship Your Cart dikendalikan oleh WIZZ SMART SERVICES SDN. BHD., syarikat berdaftar di Kuala Lumpur, Malaysia."
+  },
+  "en": {
+   "title": "About Ship Your Cart | WIZZ SMART SERVICES SDN. BHD.",
+   "description": "Ship Your Cart is operated by WIZZ SMART SERVICES SDN. BHD. (Reg. No. 202501029005), a registered company in Kuala Lumpur, Malaysia."
+  }
+ },
+ "sourcing": {
+  "ar": {
+   "title": "توفير المنتجات من ماليزيا | Ship Your Cart",
+   "description": "مواد خام وقهوة ومنتجات ماليزية للأفراد والشركات: نبحث عن الموردين ونفحص الجودة ونشحن."
+  },
+  "ms": {
+   "title": "Sumber produk dari Malaysia | Ship Your Cart",
+   "description": "Bahan mentah, kopi dan produk Malaysia untuk individu dan syarikat: kami cari pembekal, semak kualiti dan hantar."
+  },
+  "en": {
+   "title": "Product sourcing in Malaysia: raw materials, coffee, Malaysian products | Ship Your Cart",
+   "description": "We find Malaysian suppliers, compare offers, check quality and ship raw materials, coffee and Malaysian products for individuals and businesses."
+  }
+ },
+ "faq": {
+  "ar": {
+   "title": "الأسئلة الشائعة | Ship Your Cart",
+   "description": "إجابات عن الدول التي نشحن إليها، وطريقة حساب سعر الشحن، والجمارك، وتجميع الطلبات."
+  },
+  "ms": {
+   "title": "Soalan lazim | Ship Your Cart",
+   "description": "Jawapan tentang negara destinasi, cara harga penghantaran dikira, duti kastam dan penggabungan pesanan."
+  },
+  "en": {
+   "title": "Shipping FAQ | Ship Your Cart",
+   "description": "Answers about shipping destinations, prices, consolidation, customs duties, restricted items and payment."
+  }
+ },
+ "pricing": {
+  "ar": {
+   "title": "أسعار الشحن من ماليزيا إلى دول الخليج | Ship Your Cart",
+   "description": "شحن جوي من الباب إلى الباب من ماليزيا إلى السعودية والإمارات وعُمان والكويت وقطر والبحرين يبدأ من 220 رينغيت. الأسعار كاملة من 1 إلى 20 كجم."
+  },
+  "ms": {
+   "title": "Harga penghantaran dari Malaysia ke negara Teluk | Ship Your Cart",
+   "description": "Kargo udara dari pintu ke pintu dari Malaysia ke Arab Saudi, UAE, Oman, Kuwait, Qatar dan Bahrain dari RM 220. Senarai harga penuh 1 hingga 20 kg."
+  },
+  "en": {
+   "title": "Shipping prices from Malaysia to the GCC | Ship Your Cart",
+   "description": "Door-to-door air freight from Malaysia to Saudi Arabia, UAE, Oman, Kuwait, Qatar and Bahrain from RM 220. Full price list from 1 to 20 kg."
+  }
+ },
+ "account": {
+  "en": {
+   "title": "My account | Ship Your Cart",
+   "description": "Sign in to see your Malaysian address, parcels and shipments."
+  },
+  "ar": {
+   "title": "حسابي | Ship Your Cart",
+   "description": "سجّل الدخول لعرض عنوانك في ماليزيا وطرودك وشحناتك."
+  },
+  "ms": {
+   "title": "Akaun saya | Ship Your Cart",
+   "description": "Log masuk untuk melihat alamat Malaysia, bungkusan dan penghantaran anda."
+  }
+ }
+}
