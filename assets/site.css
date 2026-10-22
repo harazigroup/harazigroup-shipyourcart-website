@@ -249,7 +249,7 @@ textarea.ac-i{min-height:70px}
 .ac-free{margin:12px 0 0;text-align:center;color:#5b4f7a;font-size:14px}
 .ac-muted{color:#6f6690;font-size:14px}.ac-ok{color:#17693a;font-weight:700;font-size:14px}
 .ac-empty{color:#6f6690;margin:0}
-.ac-loading{height:60px;border-radius:16px;background:linear-gradient(90deg,#f3effd,#e9e2fb,#f3effd);background-size:200% 100%;animation:acL 1.2s linear infinite}
+.ac-loading{height:60px;border-radius:16px;background:linear-gradient(90deg,#ece6fb,#d9cdf8,#ece6fb);background-size:200% 100%;animation:acL 1.2s linear infinite}
 @keyframes acL{to{background-position:-200% 0}}
 .ac-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
 .ac-hello{font-size:22px;font-weight:800;color:#2b1a5e}

@@ -10,15 +10,19 @@
   var waNum=function(n){return String(n||'').replace(/[^0-9]/g,'')};
   var waLink=function(n,t){return 'https://wa.me/'+waNum(n)+'?text='+encodeURIComponent(t)};
   if(!window.supabase){root.innerHTML='<p class="ac-msg bad">تعذّر تحميل الخدمة. حدّث الصفحة.</p>';return}
-  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,detectSessionInUrl:true}});
+  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,lock:function(n,t,fn){return fn()},detectSessionInUrl:true}});
   var urls={};
 
   function login(msg){
     root.innerHTML='<div class="ac-card ac-auth"><h3 class="ac-h">دخول الفريق</h3><form class="ac-form" id="lg"><label class="ac-l">الإيميل</label><input class="ac-i" id="lgE" type="email" dir="ltr" autocomplete="email"><label class="ac-l">كلمة المرور</label><input class="ac-i" id="lgP" type="password" dir="ltr" autocomplete="current-password">'+(msg?'<p class="ac-msg bad">'+msg+'</p>':'')+'<button class="syc-btn" type="submit">دخول</button></form></div>';
     $('#lg').onsubmit=async function(e){e.preventDefault();var r=await sb.auth.signInWithPassword({email:$('#lgE').value.trim(),password:$('#lgP').value});if(r.error)return login('الإيميل أو كلمة المرور غير صحيحة.');start()};
   }
+  window.addEventListener('error',function(e){if(root&&!root.querySelector('.ac-card'))root.innerHTML='<p class="ac-msg bad">خطأ: '+esc(e.message)+'</p>'});
+  window.addEventListener('unhandledrejection',function(e){root.insertAdjacentHTML('afterbegin','<p class="ac-msg bad">خطأ: '+esc(e.reason&&e.reason.message||e.reason)+'</p>')});
+  function withTimeout(p,ms){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error('انتهت مهلة الاتصال بقاعدة البيانات'))},ms)})])}
   async function start(){
-    var s=await sb.auth.getSession();if(!s.data.session)return login();
+    var s;try{s=await withTimeout(sb.auth.getSession(),10000)}catch(e){return login(esc(e.message))}
+    if(!s.data.session)return login();
     var a=await sb.rpc('is_admin');
     $('#adWho').innerHTML=esc(s.data.session.user.email)+' · <button class="ac-link" id="adOut">خروج</button>';
     $('#adOut').onclick=async function(){await sb.auth.signOut();location.reload()};

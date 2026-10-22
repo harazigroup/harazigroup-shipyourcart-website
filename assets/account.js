@@ -70,7 +70,7 @@
   var rootA=$('#syc-account'),rootS=$('#syc-signup');
   if(!rootA&&!rootS)return;
   if(!window.supabase||!C.url){(rootA||rootS).innerHTML='<p class="ac-msg bad">'+T.err_load+'</p>';return}
-  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,detectSessionInUrl:true,flowType:'implicit'}});
+  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,lock:function(n,t,fn){return fn()},detectSessionInUrl:true,flowType:'implicit'}});
   function friendly(m){m=String(m||'');
     if(/invalid login credentials/i.test(m))return T.err_login;
     if(/not confirmed/i.test(m))return T.err_confirm;
@@ -123,7 +123,8 @@
   var me=null,parcels=[],ships=[],urls={},sel={};
   function addrVals(){var c=me.code;return [me.full_name+' '+c,ADDR.l1,ADDR.l2+', '+c,ADDR.pc,ADDR.city,ADDR.state,ADDR.country,ADDR.phone]}
   async function load(){
-    var s=await sb.auth.getSession();var sess=s.data&&s.data.session;
+    var s;try{s=await Promise.race([sb.auth.getSession(),new Promise(function(_,r){setTimeout(function(){r(new Error('timeout'))},10000)})])}catch(e){mode='signin';note=['bad',T.err+esc(e.message)];return authCard(rootA,false)}
+    var sess=s.data&&s.data.session;
     if(!sess){mode=mode==='reset'?'reset':'signin';return authCard(rootA,false)}
     var r=await sb.from('customers').select('*').eq('id',sess.user.id).maybeSingle();
     if(r.error||!r.data){rootA.innerHTML='<p class="ac-msg bad">'+T.err+esc(r.error?r.error.message:'no profile')+'</p><button class="ac-link" id="acOut">'+T.signout+'</button>';$('#acOut').onclick=signOut;return}
