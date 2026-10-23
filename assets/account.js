@@ -70,7 +70,7 @@
   var rootA=$('#syc-account'),rootS=$('#syc-signup');
   if(!rootA&&!rootS)return;
   if(!window.supabase||!C.url){(rootA||rootS).innerHTML='<p class="ac-msg bad">'+T.err_load+'</p>';return}
-  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,lock:function(n,t,fn){return fn()},detectSessionInUrl:true,flowType:'implicit'}});
+  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,detectSessionInUrl:true,flowType:'implicit'}});
   function friendly(m){m=String(m||'');
     if(/invalid login credentials/i.test(m))return T.err_login;
     if(/not confirmed/i.test(m))return T.err_confirm;

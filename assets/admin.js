@@ -10,7 +10,7 @@
   var waNum=function(n){return String(n||'').replace(/[^0-9]/g,'')};
   var waLink=function(n,t){return 'https://wa.me/'+waNum(n)+'?text='+encodeURIComponent(t)};
   if(!window.supabase){root.innerHTML='<p class="ac-msg bad">تعذّر تحميل الخدمة. حدّث الصفحة.</p>';return}
-  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,lock:function(n,t,fn){return fn()},detectSessionInUrl:true}});
+  var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,detectSessionInUrl:true}});
   var urls={};
 
   function login(msg){
@@ -24,28 +24,28 @@
     var s;try{s=await withTimeout(sb.auth.getSession(),10000)}catch(e){return login(esc(e.message))}
     if(!s.data.session)return login();
     var a=await sb.rpc('is_admin');
-    $('#adWho').innerHTML=esc(s.data.session.user.email)+' · <button class="ac-link" id="adOut">خروج</button>';
-    $('#adOut').onclick=async function(){await sb.auth.signOut();location.reload()};
+    $('#tmWho').innerHTML=esc(s.data.session.user.email)+' · <button class="ac-link" id="tmOut">خروج</button>';
+    $('#tmOut').onclick=async function(){await sb.auth.signOut();location.reload()};
     if(a.error||!a.data){root.innerHTML='<p class="ac-msg bad">هذا الحساب ما عنده صلاحية الإدارة. أضف الإيميل في جدول admins في Supabase.</p>';return}
     shell();
   }
   var view='ships';
   function shell(){
-    root.innerHTML='<div class="ad-tabs"><button data-v="ships">الشحنات</button><button data-v="cust">العملاء</button><button data-v="add">استلام طرد</button></div><div id="adBody"></div>';
+    root.innerHTML='<div class="tm-tabs"><button data-v="ships">الشحنات</button><button data-v="cust">العملاء</button><button data-v="add">استلام طرد</button></div><div id="tmBody"></div>';
     root.querySelectorAll('[data-v]').forEach(function(b){b.onclick=function(){view=b.getAttribute('data-v');go()}});go();
   }
   function go(){root.querySelectorAll('[data-v]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===view)});({ships:ships,cust:custList,add:addByCode})[view]()}
-  var body=function(){return $('#adBody')};
+  var body=function(){return $('#tmBody')};
 
   /* ---------- customers ---------- */
   async function custList(q){
-    body().innerHTML='<div class="ac-card"><input class="ac-i" id="cq" placeholder="ابحث بالكود أو الاسم أو الجوال أو الإيميل" value="'+esc(q||'')+'"><div id="cl" class="ad-list"><div class="ac-loading"></div></div></div>';
+    body().innerHTML='<div class="ac-card"><input class="ac-i" id="cq" placeholder="ابحث بالكود أو الاسم أو الجوال أو الإيميل" value="'+esc(q||'')+'"><div id="cl" class="tm-list"><div class="ac-loading"></div></div></div>';
     var inp=$('#cq');var t;inp.oninput=function(){clearTimeout(t);t=setTimeout(function(){custList(inp.value.trim())},350)};if(q){inp.focus();inp.setSelectionRange(q.length,q.length)}
     var qq=sb.from('customers').select('*').order('created_at',{ascending:false}).limit(60);
     if(q){var s=q.replace(/[,%()]/g,' ');qq=qq.or('code.ilike.%'+s+'%,full_name.ilike.%'+s+'%,whatsapp.ilike.%'+s+'%,email.ilike.%'+s+'%')}
     var r=await qq;var l=$('#cl');if(!l)return;
     if(r.error){l.innerHTML='<p class="ac-msg bad">'+esc(r.error.message)+'</p>';return}
-    l.innerHTML=(r.data||[]).map(function(c){return '<button class="ad-row" data-c="'+c.id+'"><b class="ad-code">'+esc(c.code)+'</b><span>'+esc(c.full_name)+'</span><span dir="ltr">'+esc(c.whatsapp)+'</span><span>'+esc(c.country)+'</span><span class="ac-muted">'+fmtD(c.created_at)+'</span></button>'}).join('')||'<p class="ac-empty">ما فيه نتائج.</p>';
+    l.innerHTML=(r.data||[]).map(function(c){return '<button class="tm-row" data-c="'+c.id+'"><b class="tm-code">'+esc(c.code)+'</b><span>'+esc(c.full_name)+'</span><span dir="ltr">'+esc(c.whatsapp)+'</span><span>'+esc(c.country)+'</span><span class="ac-muted">'+fmtD(c.created_at)+'</span></button>'}).join('')||'<p class="ac-empty">ما فيه نتائج.</p>';
     l.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){customer(b.getAttribute('data-c'))}});
   }
   async function signed(paths){paths=paths.filter(function(p){return !urls[p]});if(!paths.length)return;var u=await sb.storage.from('parcel-photos').createSignedUrls(paths,3600);(u.data||[]).forEach(function(x){if(x.signedUrl)urls[x.path]=x.signedUrl})}
@@ -71,9 +71,9 @@
   }
 
   /* ---------- parcels ---------- */
-  function parcelForm(){return '<form class="ac-form ad-pf" id="pf"><div class="ad-g2"><div><label class="ac-l">المتجر</label><input class="ac-i" id="pfS" placeholder="Shopee, Lazada..."></div><div><label class="ac-l">رقم التتبع الوارد</label><input class="ac-i" id="pfT" dir="ltr"></div></div>'+
+  function parcelForm(){return '<form class="ac-form tm-pf" id="pf"><div class="tm-g2"><div><label class="ac-l">المتجر</label><input class="ac-i" id="pfS" placeholder="Shopee, Lazada..."></div><div><label class="ac-l">رقم التتبع الوارد</label><input class="ac-i" id="pfT" dir="ltr"></div></div>'+
     '<label class="ac-l">الوصف</label><input class="ac-i" id="pfD" placeholder="مثلاً: ملابس، 2 قطعة">'+
-    '<div class="ad-g4"><div><label class="ac-l">الوزن كجم *</label><input class="ac-i" id="pfW" type="number" step="0.01" min="0" dir="ltr"></div><div><label class="ac-l">طول سم</label><input class="ac-i" id="pfL" type="number" step="0.1" dir="ltr"></div><div><label class="ac-l">عرض سم</label><input class="ac-i" id="pfWi" type="number" step="0.1" dir="ltr"></div><div><label class="ac-l">ارتفاع سم</label><input class="ac-i" id="pfH" type="number" step="0.1" dir="ltr"></div></div>'+
+    '<div class="tm-g4"><div><label class="ac-l">الوزن كجم *</label><input class="ac-i" id="pfW" type="number" step="0.01" min="0" dir="ltr"></div><div><label class="ac-l">طول سم</label><input class="ac-i" id="pfL" type="number" step="0.1" dir="ltr"></div><div><label class="ac-l">عرض سم</label><input class="ac-i" id="pfWi" type="number" step="0.1" dir="ltr"></div><div><label class="ac-l">ارتفاع سم</label><input class="ac-i" id="pfH" type="number" step="0.1" dir="ltr"></div></div>'+
     '<label class="ac-l">صور الطرد</label><input class="ac-i" id="pfP" type="file" accept="image/*" multiple>'+
     '<label class="ac-l">ملاحظة داخلية</label><input class="ac-i" id="pfN"><p id="pfM"></p><button class="syc-btn" type="submit">حفظ الطرد</button></form>'}
   function shrink(file){return new Promise(function(res){
@@ -96,16 +96,16 @@
   }
   function parcelRow(p){var ph=(p.photos||[]).map(function(x){return urls[x]?'<a href="'+urls[x]+'" target="_blank" rel="noopener"><img src="'+urls[x]+'" alt=""></a>':''}).join('');
     var vol=(p.length_cm&&p.width_cm&&p.height_cm)?(p.length_cm*p.width_cm*p.height_cm/5000).toFixed(2):null;
-    return '<div class="ad-parcel" data-pid="'+p.id+'"><div class="ac-ph">'+(ph||'<div class="ac-noph">📦</div>')+'</div><div class="ac-pb"><b>#'+p.id+'</b> '+esc(p.store||'')+' · '+esc(p.description||'')+'<div class="ac-muted">'+p.weight_kg+' كجم'+(vol?' · حجمي '+vol:'')+(p.tracking_in?' · <span dir="ltr">'+esc(p.tracking_in)+'</span>':'')+' · '+fmtD(p.received_at)+(p.shipment_id?' · شحنة #'+p.shipment_id:'')+'</div>'+(p.admin_note?'<div class="ac-muted">📝 '+esc(p.admin_note)+'</div>':'')+
-      '<div class="ad-inl"><select class="ac-i" data-ps>'+Object.keys(PST).map(function(k){return '<option value="'+k+'"'+(k===p.status?' selected':'')+'>'+PST[k]+'</option>'}).join('')+'</select><input class="ac-i" data-pw type="number" step="0.01" value="'+(p.weight_kg||'')+'" dir="ltr" title="الوزن"><button class="ac-link" data-psave>حفظ</button><button class="ac-link bad" data-pdel>حذف</button></div></div></div>'}
+    return '<div class="tm-parcel" data-pid="'+p.id+'"><div class="ac-ph">'+(ph||'<div class="ac-noph">📦</div>')+'</div><div class="ac-pb"><b>#'+p.id+'</b> '+esc(p.store||'')+' · '+esc(p.description||'')+'<div class="ac-muted">'+p.weight_kg+' كجم'+(vol?' · حجمي '+vol:'')+(p.tracking_in?' · <span dir="ltr">'+esc(p.tracking_in)+'</span>':'')+' · '+fmtD(p.received_at)+(p.shipment_id?' · شحنة #'+p.shipment_id:'')+'</div>'+(p.admin_note?'<div class="ac-muted">📝 '+esc(p.admin_note)+'</div>':'')+
+      '<div class="tm-inl"><select class="ac-i" data-ps>'+Object.keys(PST).map(function(k){return '<option value="'+k+'"'+(k===p.status?' selected':'')+'>'+PST[k]+'</option>'}).join('')+'</select><input class="ac-i" data-pw type="number" step="0.01" value="'+(p.weight_kg||'')+'" dir="ltr" title="الوزن"><button class="ac-link" data-psave>حفظ</button><button class="ac-link bad" data-pdel>حذف</button></div></div></div>'}
   function bindParcelRows(done){
-    document.querySelectorAll('.ad-parcel').forEach(function(row){var id=+row.getAttribute('data-pid');
+    document.querySelectorAll('.tm-parcel').forEach(function(row){var id=+row.getAttribute('data-pid');
       $('[data-psave]',row).onclick=async function(){var r=await sb.from('parcels').update({status:$('[data-ps]',row).value,weight_kg:$('[data-pw]',row).value===''?null:+$('[data-pw]',row).value}).eq('id',id);if(r.error)alert(r.error.message);done()};
       $('[data-pdel]',row).onclick=async function(){if(!confirm('حذف الطرد #'+id+'؟'))return;var p=(await sb.from('parcels').select('photos').eq('id',id).single()).data;if(p&&p.photos&&p.photos.length)await sb.storage.from('parcel-photos').remove(p.photos);var r=await sb.from('parcels').delete().eq('id',id);if(r.error)alert(r.error.message);done()};
     });
   }
   function addByCode(){
-    body().innerHTML='<div class="ac-card"><h3 class="ac-h">استلام طرد</h3><p class="ac-muted">اكتب كود العميل المكتوب على الطرد.</p><form id="abc" class="ad-inl"><input class="ac-i" id="abcC" placeholder="SYC-10001" dir="ltr"><button class="syc-btn" type="submit">فتح</button></form><p id="abcM"></p></div>';
+    body().innerHTML='<div class="ac-card"><h3 class="ac-h">استلام طرد</h3><p class="ac-muted">اكتب كود العميل المكتوب على الطرد.</p><form id="abc" class="tm-inl"><input class="ac-i" id="abcC" placeholder="SYC-10001" dir="ltr"><button class="syc-btn" type="submit">فتح</button></form><p id="abcM"></p></div>';
     $('#abcC').focus();
     $('#abc').onsubmit=async function(e){e.preventDefault();var v=$('#abcC').value.trim().toUpperCase().replace(/\s/g,'');if(/^\d+$/.test(v))v='SYC-'+v;if(/^SYC\d/.test(v))v=v.replace('SYC','SYC-');
       var r=await sb.from('customers').select('id').eq('code',v).maybeSingle();if(!r.data){$('#abcM').className='ac-msg bad';$('#abcM').textContent='ما لقينا عميل بهذا الكود.';return}customer(r.data.id)};
@@ -114,7 +114,7 @@
   /* ---------- shipments ---------- */
   var fStatus='requested';
   async function ships(){
-    body().innerHTML='<div class="ac-card"><div class="ad-inl"><label class="ac-l">الحالة</label><select class="ac-i" id="sf"><option value="">الكل</option>'+Object.keys(SST).map(function(k){return '<option value="'+k+'"'+(k===fStatus?' selected':'')+'>'+SST[k]+'</option>'}).join('')+'</select></div><div id="sl"><div class="ac-loading"></div></div></div>';
+    body().innerHTML='<div class="ac-card"><div class="tm-inl"><label class="ac-l">الحالة</label><select class="ac-i" id="sf"><option value="">الكل</option>'+Object.keys(SST).map(function(k){return '<option value="'+k+'"'+(k===fStatus?' selected':'')+'>'+SST[k]+'</option>'}).join('')+'</select></div><div id="sl"><div class="ac-loading"></div></div></div>';
     $('#sf').onchange=function(){fStatus=$('#sf').value;ships()};
     var q=sb.from('shipments').select('*').order('created_at',{ascending:false}).limit(100);if(fStatus)q=q.eq('status',fStatus);
     var r=await q;var list=r.data||[];
@@ -128,18 +128,18 @@
     var kg=mine.reduce(function(a,p){return a+(+p.weight_kg||0)},0);
     var vol=mine.reduce(function(a,p){return a+((p.length_cm&&p.width_cm&&p.height_cm)?p.length_cm*p.width_cm*p.height_cm/5000:0)},0);
     var inp=function(k,l,v,t){return '<div><label class="ac-l">'+l+'</label><input class="ac-i" data-k="'+k+'" value="'+esc(v==null?'':v)+'"'+(t?' type="'+t+'" step="0.01"':'')+' dir="ltr"></div>'};
-    return '<div class="ad-ship" data-sid="'+s.id+'" data-wa="'+esc(c.whatsapp||s.ship_phone||'')+'" data-name="'+esc(c.full_name||'')+'" data-code="'+esc(c.code||'')+'">'+
+    return '<div class="tm-ship" data-sid="'+s.id+'" data-wa="'+esc(c.whatsapp||s.ship_phone||'')+'" data-name="'+esc(c.full_name||'')+'" data-code="'+esc(c.code||'')+'">'+
       '<div class="ac-sh1"><b>شحنة #'+s.id+'</b> · '+fmtD(s.created_at)+' · '+(MT[s.method]||s.method)+' · '+(c.code?'<button class="ac-link" data-open="'+s.customer_id+'">'+esc(c.code)+' — '+esc(c.full_name)+'</button>':'')+'<span class="ac-pill s-'+s.status+'">'+SST[s.status]+'</span></div>'+
       '<div class="ac-sh2">📍 '+esc([s.ship_name,s.ship_phone,s.ship_address,s.ship_city,s.ship_country].filter(Boolean).join(' · '))+'</div>'+
       '<div class="ac-sh2">📦 '+mine.map(function(p){return '#'+p.id+' ('+(p.weight_kg||'?')+' كجم)'}).join('، ')+' — المجموع '+kg.toFixed(2)+' كجم'+(vol?' · حجمي '+vol.toFixed(2):'')+'</div>'+
       (s.customer_note?'<div class="ac-sh2">💬 '+esc(s.customer_note)+'</div>':'')+
-      '<div class="ad-g4"><div><label class="ac-l">الحالة</label><select class="ac-i" data-k="status">'+Object.keys(SST).map(function(k){return '<option value="'+k+'"'+(k===s.status?' selected':'')+'>'+SST[k]+'</option>'}).join('')+'</select></div>'+
+      '<div class="tm-g4"><div><label class="ac-l">الحالة</label><select class="ac-i" data-k="status">'+Object.keys(SST).map(function(k){return '<option value="'+k+'"'+(k===s.status?' selected':'')+'>'+SST[k]+'</option>'}).join('')+'</select></div>'+
       inp('weight_kg','الوزن النهائي كجم',s.weight_kg,'number')+inp('price_rm','السعر RM',s.price_rm,'number')+inp('payment_link','رابط الدفع (Stripe)',s.payment_link)+
       inp('carrier','شركة الشحن',s.carrier)+inp('tracking_no','رقم التتبع',s.tracking_no)+inp('tracking_url','رابط التتبع',s.tracking_url)+
       '<div><label class="ac-l">ملاحظة داخلية</label><input class="ac-i" data-k="admin_note" value="'+esc(s.admin_note||'')+'"></div></div>'+
       '<div class="ac-btns"><button class="syc-btn" data-ssave>حفظ</button><button class="ac-wa" data-swa>رسالة واتساب للعميل</button><span class="ac-ok" data-smsg></span></div></div>'}
   function bindShipCards(done){
-    document.querySelectorAll('.ad-ship').forEach(function(card){var id=+card.getAttribute('data-sid');
+    document.querySelectorAll('.tm-ship').forEach(function(card){var id=+card.getAttribute('data-sid');
       var val=function(k){var x=$('[data-k="'+k+'"]',card);return x?x.value.trim():''};
       $('[data-ssave]',card).onclick=async function(){var up={status:val('status'),payment_link:val('payment_link')||null,carrier:val('carrier')||null,tracking_no:val('tracking_no')||null,tracking_url:val('tracking_url')||null,admin_note:val('admin_note')||null,
         weight_kg:val('weight_kg')===''?null:+val('weight_kg'),price_rm:val('price_rm')===''?null:+val('price_rm')};
