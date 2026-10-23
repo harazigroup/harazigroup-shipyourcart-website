@@ -5,8 +5,15 @@
 // Secrets: STRIPE_SECRET_KEY, SITE_URL
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
+function serviceKey() {
+  const k = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (k) return k;
+  const s = Deno.env.get("SUPABASE_SECRET_KEYS") || "";
+  try { const o = JSON.parse(s); return (Object.values(o)[0] as string) || ""; } catch { return s; }
+}
+
 const URL_ = Deno.env.get("SUPABASE_URL")!;
-const admin = createClient(URL_, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+const admin = createClient(URL_, serviceKey());
 const SITE = (Deno.env.get("SITE_URL") || "https://shipyourcart.com.my").replace(/\/$/, "");
 const SK = Deno.env.get("STRIPE_SECRET_KEY")!;
 const cors = {

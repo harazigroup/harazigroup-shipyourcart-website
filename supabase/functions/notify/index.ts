@@ -4,7 +4,14 @@
 // Secrets: RESEND_API_KEY, SITE_URL, MAIL_FROM, MAIL_REPLY_TO, ADMIN_EMAIL
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+function serviceKey() {
+  const k = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (k) return k;
+  const s = Deno.env.get("SUPABASE_SECRET_KEYS") || "";
+  try { const o = JSON.parse(s); return (Object.values(o)[0] as string) || ""; } catch { return s; }
+}
+
+const sb = createClient(Deno.env.get("SUPABASE_URL")!, serviceKey());
 const SITE = (Deno.env.get("SITE_URL") || "https://shipyourcart.com.my").replace(/\/$/, "");
 const FROM = Deno.env.get("MAIL_FROM") || "Ship Your Cart <info@shipyourcart.com.my>";
 const REPLY = Deno.env.get("MAIL_REPLY_TO") || "shipyourcart@gmail.com";

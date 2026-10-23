@@ -3,7 +3,14 @@
 // Event: checkout.session.completed  ·  Secrets: STRIPE_WEBHOOK_SECRET
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+function serviceKey() {
+  const k = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (k) return k;
+  const s = Deno.env.get("SUPABASE_SECRET_KEYS") || "";
+  try { const o = JSON.parse(s); return (Object.values(o)[0] as string) || ""; } catch { return s; }
+}
+
+const admin = createClient(Deno.env.get("SUPABASE_URL")!, serviceKey());
 const SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET")!;
 
 async function valid(payload: string, header: string) {
