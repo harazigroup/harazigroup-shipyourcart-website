@@ -7,7 +7,7 @@
   var RATES=[0,220,290,335,390,450,500,560,610,670,720,780,830,890,940,1000,1050,1110,1170,1220,1290];
   var GCC=['saudi','ksa','السعودية','uae','emirates','الإمارات','الامارات','oman','عمان','عُمان','kuwait','الكويت','qatar','قطر','bahrain','البحرين'];
   var T={
-  en:{signin:'Sign in',signup:'Create account',email:'Email',pw:'Password',pw2:'Repeat password',name:'Full name',wa:'WhatsApp number',country:'Country',
+  en:{signin:'Sign in',first:'First name',last:'Last name',phone:'Phone number (WhatsApp)',err_req2:'Please fill in first and last name, country and phone number.',signup:'Create account',email:'Email',pw:'Password',pw2:'Repeat password',name:'Full name',wa:'WhatsApp number',country:'Country',
    forgot:'Forgot password?',send_reset:'Send reset link',back:'Back to sign in',have:'Already have an account?',noacc:'New here?',
    free:'Free account — you only pay when we ship.',newpw:'Set a new password',save:'Save',signout:'Sign out',
    hello:'Hello',code:'Your customer code',addr:'Your Malaysian address',addr_note:'Use this address at checkout in any Malaysian online store. Always keep your code next to your name so we know the parcel is yours.',
@@ -25,7 +25,7 @@
    err_login:'Email or password is not correct.',err_confirm:'Please confirm your email first (check your inbox).',err_exists:'This email already has an account. Sign in instead.',err_rate:'Too many attempts. Wait a minute and try again.',
    err:'Something went wrong: ',err_load:'The account service could not load. Check your connection and refresh.',
    paid_ok:'Payment received, thank you! We will ship your parcels soon.',wa_msg:'Hi Ship Your Cart, my customer code is ',go_acc:'Go to my account',photo:'Photo'},
-  ar:{signin:'تسجيل الدخول',signup:'حساب جديد',email:'الإيميل',pw:'كلمة المرور',pw2:'أعد كلمة المرور',name:'الاسم الكامل',wa:'رقم الواتساب',country:'الدولة',
+  ar:{signin:'تسجيل الدخول',first:'الاسم الأول',last:'اسم العائلة',phone:'رقم الجوال (واتساب)',err_req2:'اكتب الاسم الأول واسم العائلة، واختر الدولة، واكتب رقم الجوال.',signup:'حساب جديد',email:'الإيميل',pw:'كلمة المرور',pw2:'أعد كلمة المرور',name:'الاسم الكامل',wa:'رقم الواتساب',country:'الدولة',
    forgot:'نسيت كلمة المرور؟',send_reset:'أرسل رابط التعيين',back:'رجوع لتسجيل الدخول',have:'عندك حساب؟',noacc:'جديد عندنا؟',
    free:'الحساب مجاني، وتدفع فقط لما نشحن.',newpw:'اختر كلمة مرور جديدة',save:'حفظ',signout:'تسجيل الخروج',
    hello:'أهلاً',code:'كود العميل الخاص بك',addr:'عنوانك في ماليزيا',addr_note:'استخدم هذا العنوان عند الطلب من أي متجر ماليزي أونلاين. اكتب الكود دائمًا بجانب اسمك عشان نعرف إن الطرد لك.',
@@ -43,7 +43,7 @@
    err_login:'الإيميل أو كلمة المرور غير صحيحة.',err_confirm:'أكّد إيميلك أولاً (شيك بريدك).',err_exists:'هذا الإيميل له حساب. سجّل الدخول بداله.',err_rate:'محاولات كثيرة. انتظر دقيقة وحاول مرة ثانية.',
    err:'صار خطأ: ',err_load:'تعذّر تحميل خدمة الحساب. تأكد من اتصالك وحدّث الصفحة.',
    paid_ok:'استلمنا الدفع، شكراً لك! بنشحن طرودك قريب.',wa_msg:'هلا Ship Your Cart، كود العميل حقي ',go_acc:'روح لحسابي',photo:'صورة'},
-  ms:{signin:'Log masuk',signup:'Buka akaun',email:'E-mel',pw:'Kata laluan',pw2:'Ulang kata laluan',name:'Nama penuh',wa:'Nombor WhatsApp',country:'Negara',
+  ms:{signin:'Log masuk',first:'Nama pertama',last:'Nama keluarga',phone:'Nombor telefon (WhatsApp)',err_req2:'Sila isi nama pertama dan keluarga, negara dan nombor telefon.',signup:'Buka akaun',email:'E-mel',pw:'Kata laluan',pw2:'Ulang kata laluan',name:'Nama penuh',wa:'Nombor WhatsApp',country:'Negara',
    forgot:'Lupa kata laluan?',send_reset:'Hantar pautan',back:'Kembali ke log masuk',have:'Sudah ada akaun?',noacc:'Baru di sini?',
    free:'Akaun percuma — anda hanya bayar apabila kami menghantar.',newpw:'Tetapkan kata laluan baharu',save:'Simpan',signout:'Log keluar',
    hello:'Hai',code:'Kod pelanggan anda',addr:'Alamat Malaysia anda',addr_note:'Gunakan alamat ini semasa checkout di mana-mana kedai dalam talian Malaysia. Sentiasa letakkan kod anda di sebelah nama.',
@@ -62,6 +62,19 @@
    err:'Ralat: ',err_load:'Perkhidmatan akaun tidak dapat dimuatkan. Semak sambungan dan muat semula.',
    paid_ok:'Bayaran diterima, terima kasih! Kami akan menghantar bungkusan anda tidak lama lagi.',wa_msg:'Hai Ship Your Cart, kod pelanggan saya ',go_acc:'Ke akaun saya',photo:'Gambar'}
   }[L];
+  var DIAL={};'AF93 AL355 DZ213 AD376 AO244 AG1 AR54 AM374 AU61 AT43 AZ994 BS1 BH973 BD880 BB1 BY375 BE32 BZ501 BJ229 BT975 BO591 BA387 BW267 BR55 BN673 BG359 BF226 BI257 KH855 CM237 CA1 CV238 CF236 TD235 CL56 CN86 CO57 KM269 CG242 CD243 CR506 CI225 HR385 CU53 CY357 CZ420 DK45 DJ253 DM1 DO1 EC593 EG20 SV503 GQ240 ER291 EE372 SZ268 ET251 FJ679 FI358 FR33 GA241 GM220 GE995 DE49 GH233 GR30 GD1 GT502 GN224 GW245 GY592 HT509 HN504 HK852 HU36 IS354 IN91 ID62 IR98 IQ964 IE353 IT39 JM1 JP81 JO962 KZ7 KE254 KI686 KW965 KG996 LA856 LV371 LB961 LS266 LR231 LY218 LI423 LT370 LU352 MO853 MG261 MW265 MY60 MV960 ML223 MT356 MH692 MR222 MU230 MX52 FM691 MD373 MC377 MN976 ME382 MA212 MZ258 MM95 NA264 NR674 NP977 NL31 NZ64 NI505 NE227 NG234 KP850 MK389 NO47 OM968 PK92 PW680 PS970 PA507 PG675 PY595 PE51 PH63 PL48 PT351 QA974 RO40 RU7 RW250 KN1 LC1 VC1 WS685 SM378 ST239 SA966 SN221 RS381 SC248 SL232 SG65 SK421 SI386 SB677 SO252 ZA27 KR82 SS211 ES34 LK94 SD249 SR597 SE46 CH41 SY963 TW886 TJ992 TZ255 TH66 TL670 TG228 TO676 TT1 TN216 TR90 TM993 TV688 UG256 UA380 AE971 GB44 US1 UY598 UZ998 VU678 VE58 VN84 YE967 ZM260 ZW263'.split(' ').forEach(function(x){DIAL[x.slice(0,2)]=x.slice(2)});
+  var TOP=['SA','AE','OM','KW','QA','BH','MY'];
+  function cname(code,l){try{return new Intl.DisplayNames([l==='ms'?'ms':l],{type:'region'}).of(code)}catch(e){return code}}
+  function codeFromName(n){n=String(n||'').toLowerCase();for(var k in DIAL){if(cname(k,'en').toLowerCase()===n||cname(k,'ar')===n||cname(k,'ms').toLowerCase()===n)return k}return ''}
+  function countrySelect(id,label,cur){
+    var all=Object.keys(DIAL).filter(function(k){return TOP.indexOf(k)<0}).sort(function(a,b){return cname(a,L).localeCompare(cname(b,L),L)});
+    var opt=function(k){return '<option value="'+k+'"'+(k===cur?' selected':'')+'>'+esc(cname(k,L))+'</option>'};
+    return '<label class="ac-l" for="'+id+'">'+label+' *</label><select class="ac-i" id="'+id+'" required><option value="">—</option>'+TOP.map(opt).join('')+'<option disabled>──────────</option>'+all.map(opt).join('')+'</select>'}
+  function phoneField(id,label,cc,num){return '<label class="ac-l" for="'+id+'">'+label+' *</label><div class="ac-phone" dir="ltr"><span class="ac-cc" id="'+id+'Cc">'+(cc?'+'+DIAL[cc]:'+')+'</span><input class="ac-i" id="'+id+'" type="tel" inputmode="tel" autocomplete="tel-national" value="'+esc(num||'')+'" required></div>'}
+  function pwField(id,label,ac){return '<label class="ac-l" for="'+id+'">'+label+' *</label><div class="ac-pw"><input class="ac-i" id="'+id+'" type="password" autocomplete="'+ac+'" dir="ltr" required><button type="button" class="ac-eye" data-eye="'+id+'" aria-label="show password">👁</button></div>'}
+  function wirePhone(root,sel,ph){var s=$('#'+sel,root);if(!s)return;s.addEventListener('change',function(){$('#'+ph+'Cc',root).textContent=s.value?'+'+DIAL[s.value]:'+'})}
+  function wireEyes(root){root.querySelectorAll('[data-eye]').forEach(function(b){b.onclick=function(){var i=$('#'+b.getAttribute('data-eye'),root);i.type=i.type==='password'?'text':'password';b.classList.toggle('on',i.type==='text')}})}
+  function fullPhone(cc,num){num=String(num||'').replace(/[^0-9]/g,'').replace(/^0+/,'');return cc&&num?'+'+DIAL[cc]+' '+num:''}
   var $=function(s,r){return (r||document).querySelector(s)};
   var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var fmtD=function(d){try{return new Date(d).toLocaleDateString(L==='ar'?'ar':(L==='ms'?'ms-MY':'en-GB'),{day:'numeric',month:'short',year:'numeric'})}catch(e){return d}};
@@ -86,10 +99,10 @@
   function authCard(root,embed){
     var tabs='<div class="ac-tabs"><button type="button" data-m="signin" class="'+(mode==='signin'?'on':'')+'">'+T.signin+'</button><button type="button" data-m="signup" class="'+(mode==='signup'?'on':'')+'">'+T.signup+'</button></div>';
     var f='';
-    if(mode==='signup'){f=field('acName',T.name,'text','',1,'name')+field('acWa',T.wa,'tel','',1,'tel')+field('acCountry',T.country,'text','',1,'country-name')+field('acEmail',T.email,'email',lastEmail,1,'email')+field('acPw',T.pw,'password','',1,'new-password')+field('acPw2',T.pw2,'password','',1,'new-password')}
+    if(mode==='signup'){f='<div class="ac-2">'+'<div>'+field('acFirst',T.first,'text','',1,'given-name')+'</div><div>'+field('acLast',T.last,'text','',1,'family-name')+'</div></div>'+countrySelect('acCountry',T.country,'')+phoneField('acPhone',T.phone,'','')+field('acEmail',T.email,'email',lastEmail,1,'email')+pwField('acPw',T.pw,'new-password')+pwField('acPw2',T.pw2,'new-password')}
     else if(mode==='forgot'){f=field('acEmail',T.email,'email',lastEmail,1,'email')}
-    else if(mode==='reset'){f=field('acPw',T.newpw,'password','',1,'new-password')+field('acPw2',T.pw2,'password','',1,'new-password')}
-    else {f=field('acEmail',T.email,'email',lastEmail,1,'email')+field('acPw',T.pw,'password','',1,'current-password')}
+    else if(mode==='reset'){f=pwField('acPw',T.newpw,'new-password')+pwField('acPw2',T.pw2,'new-password')}
+    else {f=field('acEmail',T.email,'email',lastEmail,1,'email')+pwField('acPw',T.pw,'current-password')}
     var btn={signin:T.signin,signup:T.signup,forgot:T.send_reset,reset:T.save}[mode];
     var links=mode==='signin'?'<button type="button" class="ac-link" data-m="forgot">'+T.forgot+'</button>':(mode==='forgot'?'<button type="button" class="ac-link" data-m="signin">'+T.back+'</button>':'');
     root.innerHTML='<div class="ac-card ac-auth">'+((mode==='signin'||mode==='signup')?tabs:'<h3 class="ac-h">'+(mode==='reset'?T.newpw:T.forgot)+'</h3>')+
@@ -97,6 +110,7 @@
       (mode==='signup'?'<p class="ac-free">'+T.free+'</p>':'')+'</div>';
     root.querySelectorAll('[data-m]').forEach(function(b){b.addEventListener('click',function(){var e=$('#acEmail',root);if(e)lastEmail=e.value.trim();mode=b.getAttribute('data-m');note=null;authCard(root,embed)})});
     $('form',root).addEventListener('submit',function(e){e.preventDefault();submitAuth(root,embed)});
+    wirePhone(root,'acCountry','acPhone');wireEyes(root);
   }
   async function submitAuth(root,embed){
     var g=function(id){var x=$('#'+id,root);return x?x.value.trim():''};
@@ -104,11 +118,11 @@
     if(mode!=='reset'&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){note=['bad',T.err_email];lastEmail=email;return authCard(root,embed)}
     if((mode==='signup'||mode==='reset')&&pw.length<8){note=['bad',T.err_pw];lastEmail=email;return authCard(root,embed)}
     if((mode==='signup'||mode==='reset')&&pw!==pw2){note=['bad',T.err_pw2];lastEmail=email;return authCard(root,embed)}
-    if(mode==='signup'&&(!g('acName')||!g('acWa')||!g('acCountry'))){note=['bad',T.err_req];lastEmail=email;return authCard(root,embed)}
+    if(mode==='signup'&&(!g('acFirst')||!g('acLast')||!g('acCountry')||g('acPhone').replace(/[^0-9]/g,'').length<6)){note=['bad',T.err_req2];lastEmail=email;return authCard(root,embed)}
     lastEmail=email;var b=$('.ac-submit',root);b.disabled=true;b.classList.add('busy');var r;
     try{
       if(mode==='signin'){r=await sb.auth.signInWithPassword({email:email,password:pw});if(r.error)throw r.error;return afterLogin(embed)}
-      if(mode==='signup'){r=await sb.auth.signUp({email:email,password:pw,options:{emailRedirectTo:location.origin+ACC,data:{full_name:g('acName'),whatsapp:g('acWa'),country:g('acCountry'),lang:L}}});
+      if(mode==='signup'){r=await sb.auth.signUp({email:email,password:pw,options:{emailRedirectTo:location.origin+ACC,data:{full_name:(g('acFirst')+' '+g('acLast')).replace(/\s+/g,' ').trim(),whatsapp:fullPhone(g('acCountry'),g('acPhone')),country:cname(g('acCountry'),'en'),lang:L}}});
         if(r.error)throw r.error;
         if(r.data&&r.data.user&&r.data.user.identities&&r.data.user.identities.length===0)throw new Error('already registered');
         if(r.data&&r.data.session)return afterLogin(embed);
@@ -188,7 +202,7 @@
         (s.status==='requested'?'<button class="ac-link" data-cancel="'+s.id+'">'+T.cancel_req+'</button>':'')+'</div>'}).join('');
     h+='</div>';
     // profile
-    h+='<details class="ac-card ac-prof"><summary class="ac-h">'+T.profile+'</summary><form id="acProf" class="ac-form">'+field('pfName',T.name,'text',me.full_name,1)+field('pfWa',T.wa,'tel',me.whatsapp,1)+field('pfCountry',T.country,'text',me.country,1)+
+    h+='<details class="ac-card ac-prof"><summary class="ac-h">'+T.profile+'</summary><form id="acProf" class="ac-form">'+field('pfName',T.name,'text',me.full_name,1)+countrySelect('pfCountry',T.country,codeFromName(me.country))+field('pfWa',T.phone,'tel',me.whatsapp,1)+
       '<p class="ac-muted">'+T.email+': <span dir="ltr">'+esc(me.email)+'</span></p><button class="syc-btn" type="submit">'+T.save+'</button><span id="pfMsg" class="ac-ok"></span></form></details>';
     rootA.innerHTML=h;bind(v);
   }
@@ -202,7 +216,7 @@
     rootA.querySelectorAll('[data-p]').forEach(function(c){c.onchange=function(){sel[c.getAttribute('data-p')]=c.checked;render()}});
     var rq=$('#acReq');if(rq)rq.onclick=reqForm;
     rootA.querySelectorAll('[data-cancel]').forEach(function(b){b.onclick=async function(){b.disabled=true;var r=await sb.rpc('cancel_shipment',{p_id:+b.getAttribute('data-cancel')});if(r.error)alert(friendly(r.error.message));load()}});
-    $('#acProf').onsubmit=async function(e){e.preventDefault();var r=await sb.from('customers').update({full_name:$('#pfName').value.trim(),whatsapp:$('#pfWa').value.trim(),country:$('#pfCountry').value.trim()}).eq('id',me.id);$('#pfMsg').textContent=r.error?friendly(r.error.message):T.saved;if(!r.error){me.full_name=$('#pfName').value.trim()}};
+    $('#acProf').onsubmit=async function(e){e.preventDefault();var r=await sb.from('customers').update({full_name:$('#pfName').value.trim().replace(/\s+/g,' '),whatsapp:$('#pfWa').value.trim(),country:$('#pfCountry').value?cname($('#pfCountry').value,'en'):me.country}).eq('id',me.id);$('#pfMsg').textContent=r.error?friendly(r.error.message):T.saved;if(!r.error){me.full_name=$('#pfName').value.trim()}};
   }
   function estimate(ids,country){
     var kg=0,miss=false;ids.forEach(function(id){var p=parcels.find(function(x){return String(x.id)===String(id)});if(p&&p.weight_kg){var vol=(p.length_cm&&p.width_cm&&p.height_cm)?p.length_cm*p.width_cm*p.height_cm/5000:0;kg+=Math.max(+p.weight_kg,vol)}else miss=true});

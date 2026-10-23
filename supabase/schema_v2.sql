@@ -57,3 +57,24 @@ create trigger notify_parcel after insert on public.parcels
 drop trigger if exists notify_shipment on public.shipments;
 create trigger notify_shipment after insert or update of status on public.shipments
   for each row execute function public.call_notify();
+
+-- welcome email after the customer confirms their email
+create or replace function public.notify_on_confirm() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if old.email_confirmed_at is null and new.email_confirmed_at is not null then
+    begin
+      perform net.http_post(
+        url := 'https://lmwpilpcuxyzpygylclq.supabase.co/functions/v1/notify',
+        body := jsonb_build_object('table', 'customers', 'id', new.id),
+        headers := '{"Content-Type":"application/json"}'::jsonb
+      );
+    exception when others then
+      raise warning 'notify call failed: %', sqlerrm;
+    end;
+  end if;
+  return new;
+end $$;
+drop trigger if exists on_auth_user_confirmed on auth.users;
+create trigger on_auth_user_confirmed after update of email_confirmed_at on auth.users
+  for each row execute function public.notify_on_confirm();

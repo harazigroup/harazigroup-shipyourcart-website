@@ -74,6 +74,9 @@ const ST = { requested: "طلب جديد", quoted: "تم التسعير", paid: 
 async function onCustomer(id: string) {
   const { data: c } = await sb.from("customers").select("*").eq("id", id).single();
   if (!c) return [];
+  // wait until the customer has confirmed their email (if confirmation is on)
+  const { data: au } = await sb.auth.admin.getUserById(id);
+  if (!au?.user?.email_confirmed_at) return ["waiting for email confirmation"];
   const l = lang(c), out: string[] = [];
   const W = {
     en: [`Welcome to Ship Your Cart, your code is ${c.code}`, "Your account is ready", `${T.en.hi} ${esc(c.full_name)},<br>Your customer code is ${codeTag(c.code)}<br><br>Use this address at checkout in any Malaysian online store, and always keep your code next to your name:`, "Registration is free. You only pay for shipping after we weigh your parcels."],
