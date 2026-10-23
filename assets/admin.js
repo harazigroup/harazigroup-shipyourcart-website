@@ -84,12 +84,14 @@
     f.onsubmit=async function(e){e.preventDefault();var n=function(id){var v=$('#'+id).value;return v===''?null:+v};
       if(!$('#pfW').value){$('#pfM').className='ac-msg bad';$('#pfM').textContent='اكتب الوزن.';return}
       var b=$('button[type=submit]',f);b.disabled=true;$('#pfM').className='ac-muted';$('#pfM').textContent='جاري الحفظ...';
-      var r=await sb.from('parcels').insert({customer_id:c.id,store:$('#pfS').value.trim()||null,tracking_in:$('#pfT').value.trim()||null,description:$('#pfD').value.trim()||null,weight_kg:n('pfW'),length_cm:n('pfL'),width_cm:n('pfWi'),height_cm:n('pfH'),admin_note:$('#pfN').value.trim()||null}).select().single();
-      if(r.error){b.disabled=false;$('#pfM').className='ac-msg bad';$('#pfM').textContent=r.error.message;return}
-      var p=r.data,files=[].slice.call($('#pfP').files||[]),paths=[];
-      for(var i=0;i<files.length;i++){$('#pfM').textContent='رفع الصور '+(i+1)+'/'+files.length+'...';var blob=await shrink(files[i]);var path=c.id+'/'+p.id+'/'+Date.now()+'-'+i+'.jpg';
+      var files=[].slice.call($('#pfP').files||[]),paths=[];
+      for(var i=0;i<files.length;i++){$('#pfM').textContent='رفع الصور '+(i+1)+'/'+files.length+'...';var blob=await shrink(files[i]);
+        var path=c.id+'/'+(window.crypto&&crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+i)+'.jpg';
         var u=await sb.storage.from('parcel-photos').upload(path,blob,{contentType:blob.type||'image/jpeg',upsert:false});if(!u.error)paths.push(path)}
-      if(paths.length)await sb.from('parcels').update({photos:paths}).eq('id',p.id);
+      $('#pfM').textContent='جاري الحفظ...';
+      var r=await sb.from('parcels').insert({customer_id:c.id,store:$('#pfS').value.trim()||null,tracking_in:$('#pfT').value.trim()||null,description:$('#pfD').value.trim()||null,weight_kg:n('pfW'),length_cm:n('pfL'),width_cm:n('pfWi'),height_cm:n('pfH'),admin_note:$('#pfN').value.trim()||null,photos:paths}).select().single();
+      if(r.error){b.disabled=false;$('#pfM').className='ac-msg bad';$('#pfM').textContent=r.error.message;return}
+      var p=r.data;
       var msg='هلا '+c.full_name+'\nوصل طردك لمستودع Ship Your Cart\nرقم الطرد: #'+p.id+(p.store?'\nالمتجر: '+p.store:'')+'\nالوزن: '+p.weight_kg+' كجم\nتقدر تشوف الصور وتطلب الشحن من حسابك: '+location.origin+'/ar/account/';
       done('تم حفظ الطرد #'+p.id+(c.whatsapp?' — <a target="_blank" rel="noopener" href="'+waLink(c.whatsapp,msg)+'">بلّغ العميل على الواتساب</a>':''));
     };
@@ -134,7 +136,7 @@
       '<div class="ac-sh2">📦 '+mine.map(function(p){return '#'+p.id+' ('+(p.weight_kg||'?')+' كجم)'}).join('، ')+' — المجموع '+kg.toFixed(2)+' كجم'+(vol?' · حجمي '+vol.toFixed(2):'')+'</div>'+
       (s.customer_note?'<div class="ac-sh2">💬 '+esc(s.customer_note)+'</div>':'')+
       '<div class="tm-g4"><div><label class="ac-l">الحالة</label><select class="ac-i" data-k="status">'+Object.keys(SST).map(function(k){return '<option value="'+k+'"'+(k===s.status?' selected':'')+'>'+SST[k]+'</option>'}).join('')+'</select></div>'+
-      inp('weight_kg','الوزن النهائي كجم',s.weight_kg,'number')+inp('price_rm','السعر RM',s.price_rm,'number')+inp('payment_link','رابط الدفع (Stripe)',s.payment_link)+
+      inp('weight_kg','الوزن النهائي كجم',s.weight_kg,'number')+inp('price_rm','السعر RM',s.price_rm,'number')+inp('payment_link','رابط دفع (اختياري)',s.payment_link)+
       inp('carrier','شركة الشحن',s.carrier)+inp('tracking_no','رقم التتبع',s.tracking_no)+inp('tracking_url','رابط التتبع',s.tracking_url)+
       '<div><label class="ac-l">ملاحظة داخلية</label><input class="ac-i" data-k="admin_note" value="'+esc(s.admin_note||'')+'"></div></div>'+
       '<div class="ac-btns"><button class="syc-btn" data-ssave>حفظ</button><button class="ac-wa" data-swa>رسالة واتساب للعميل</button><span class="ac-ok" data-smsg></span></div></div>'}

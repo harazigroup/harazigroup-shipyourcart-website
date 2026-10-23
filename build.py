@@ -20,6 +20,8 @@ META = json.load(open(os.path.join(SRC, 'pages.json'), encoding='utf-8'))
 SUPABASE_URL = 'https://lmwpilpcuxyzpygylclq.supabase.co'
 SUPABASE_KEY = 'sb_publishable_gQveLo1t1IwFtuda2gOxpg_NxsCrWHg'
 SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js'
+# Stripe publishable key (pk_live_... — public). Empty = use the payment link set in the admin page.
+STRIPE_PK = ''
 VER = date.today().strftime('%Y%m%d')
 
 def read(*p):
@@ -85,9 +87,11 @@ def build_page(slug, lang, prefix, hl, d):
     body = body.replace('{{footer}}', read('partials', 'footer.%s.html' % lang))
     body = body.replace('{{signup_form}}', '<div id="syc-signup" class="ac-embed"></div>')
     page = head(slug, lang, prefix, hl, d) + body + WA + lang_switch(slug, lang)
-    page += '\n<script>window.SYC={url:"%s",key:"%s",lang:"%s",prefix:"%s"};</script>' % (SUPABASE_URL, SUPABASE_KEY, lang, prefix)
+    page += '\n<script>window.SYC={url:"%s",key:"%s",lang:"%s",prefix:"%s",stripePk:"%s"};</script>' % (SUPABASE_URL, SUPABASE_KEY, lang, prefix, STRIPE_PK)
     page += '\n<script src="/assets/site.js?v=%s" defer></script>' % VER
     if slug in ('account', 'shop-and-ship'):
+        if slug == 'account' and STRIPE_PK:
+            page += '\n<script src="https://js.stripe.com/v3/"></script>'
         page += '\n<script src="%s" defer></script>\n<script src="/assets/account.js?v=%s" defer></script>' % (SUPABASE_JS, VER)
     page += '\n</body>\n</html>\n'
     out = os.path.join(OUT, path_of(slug, prefix).lstrip('/'), 'index.html')

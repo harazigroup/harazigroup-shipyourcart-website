@@ -24,7 +24,7 @@
    err_email:'Please enter a valid email.',err_pw:'Use at least 8 characters.',err_pw2:'The passwords don\'t match.',err_req:'Please fill in the required fields.',
    err_login:'Email or password is not correct.',err_confirm:'Please confirm your email first (check your inbox).',err_exists:'This email already has an account. Sign in instead.',err_rate:'Too many attempts. Wait a minute and try again.',
    err:'Something went wrong: ',err_load:'The account service could not load. Check your connection and refresh.',
-   wa_msg:'Hi Ship Your Cart My customer code is ',go_acc:'Go to my account',photo:'Photo'},
+   paid_ok:'Payment received, thank you! We will ship your parcels soon.',wa_msg:'Hi Ship Your Cart, my customer code is ',go_acc:'Go to my account',photo:'Photo'},
   ar:{signin:'تسجيل الدخول',signup:'حساب جديد',email:'الإيميل',pw:'كلمة المرور',pw2:'أعد كلمة المرور',name:'الاسم الكامل',wa:'رقم الواتساب',country:'الدولة',
    forgot:'نسيت كلمة المرور؟',send_reset:'أرسل رابط التعيين',back:'رجوع لتسجيل الدخول',have:'عندك حساب؟',noacc:'جديد عندنا؟',
    free:'الحساب مجاني، وتدفع فقط لما نشحن.',newpw:'اختر كلمة مرور جديدة',save:'حفظ',signout:'تسجيل الخروج',
@@ -42,7 +42,7 @@
    err_email:'اكتب إيميل صحيح.',err_pw:'استخدم 8 أحرف على الأقل.',err_pw2:'كلمتا المرور غير متطابقتين.',err_req:'عبّ الحقول المطلوبة.',
    err_login:'الإيميل أو كلمة المرور غير صحيحة.',err_confirm:'أكّد إيميلك أولاً (شيك بريدك).',err_exists:'هذا الإيميل له حساب. سجّل الدخول بداله.',err_rate:'محاولات كثيرة. انتظر دقيقة وحاول مرة ثانية.',
    err:'صار خطأ: ',err_load:'تعذّر تحميل خدمة الحساب. تأكد من اتصالك وحدّث الصفحة.',
-   wa_msg:'هلا Ship Your Cart كود العميل حقي ',go_acc:'روح لحسابي',photo:'صورة'},
+   paid_ok:'استلمنا الدفع، شكراً لك! بنشحن طرودك قريب.',wa_msg:'هلا Ship Your Cart، كود العميل حقي ',go_acc:'روح لحسابي',photo:'صورة'},
   ms:{signin:'Log masuk',signup:'Buka akaun',email:'E-mel',pw:'Kata laluan',pw2:'Ulang kata laluan',name:'Nama penuh',wa:'Nombor WhatsApp',country:'Negara',
    forgot:'Lupa kata laluan?',send_reset:'Hantar pautan',back:'Kembali ke log masuk',have:'Sudah ada akaun?',noacc:'Baru di sini?',
    free:'Akaun percuma — anda hanya bayar apabila kami menghantar.',newpw:'Tetapkan kata laluan baharu',save:'Simpan',signout:'Log keluar',
@@ -60,7 +60,7 @@
    err_email:'Masukkan e-mel yang sah.',err_pw:'Gunakan sekurang-kurangnya 8 aksara.',err_pw2:'Kata laluan tidak sama.',err_req:'Sila isi ruangan wajib.',
    err_login:'E-mel atau kata laluan salah.',err_confirm:'Sila sahkan e-mel anda dahulu.',err_exists:'E-mel ini sudah ada akaun. Sila log masuk.',err_rate:'Terlalu banyak cubaan. Tunggu seminit.',
    err:'Ralat: ',err_load:'Perkhidmatan akaun tidak dapat dimuatkan. Semak sambungan dan muat semula.',
-   wa_msg:'Hai Ship Your Cart Kod pelanggan saya ',go_acc:'Ke akaun saya',photo:'Gambar'}
+   paid_ok:'Bayaran diterima, terima kasih! Kami akan menghantar bungkusan anda tidak lama lagi.',wa_msg:'Hai Ship Your Cart, kod pelanggan saya ',go_acc:'Ke akaun saya',photo:'Gambar'}
   }[L];
   var $=function(s,r){return (r||document).querySelector(s)};
   var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
@@ -108,7 +108,7 @@
     lastEmail=email;var b=$('.ac-submit',root);b.disabled=true;b.classList.add('busy');var r;
     try{
       if(mode==='signin'){r=await sb.auth.signInWithPassword({email:email,password:pw});if(r.error)throw r.error;return afterLogin(embed)}
-      if(mode==='signup'){r=await sb.auth.signUp({email:email,password:pw,options:{emailRedirectTo:location.origin+ACC,data:{full_name:g('acName'),whatsapp:g('acWa'),country:g('acCountry')}}});
+      if(mode==='signup'){r=await sb.auth.signUp({email:email,password:pw,options:{emailRedirectTo:location.origin+ACC,data:{full_name:g('acName'),whatsapp:g('acWa'),country:g('acCountry'),lang:L}}});
         if(r.error)throw r.error;
         if(r.data&&r.data.user&&r.data.user.identities&&r.data.user.identities.length===0)throw new Error('already registered');
         if(r.data&&r.data.session)return afterLogin(embed);
@@ -135,6 +135,26 @@
     var paths=[];parcels.forEach(function(p){(p.photos||[]).forEach(function(x){if(!urls[x])paths.push(x)})});
     if(paths.length){var u=await sb.storage.from('parcel-photos').createSignedUrls(paths,3600);(u.data||[]).forEach(function(x){if(x.signedUrl)urls[x.path]=x.signedUrl})}
     render();
+  }
+  var stripe=null;
+  async function pay(id,btn){
+    btn.disabled=true;btn.classList.add('busy');
+    try{
+      if(!window.Stripe)throw new Error('Stripe');
+      stripe=stripe||window.Stripe(C.stripePk,{locale:L==='ms'?'ms':L});
+      var r=await sb.functions.invoke('checkout',{body:{shipment_id:id,action:'start',lang:L}});
+      if(r.error||!r.data||!r.data.clientSecret)throw new Error((r.data&&r.data.error)||(r.error&&r.error.message)||'checkout');
+      var m=document.createElement('div');m.className='ac-modal';m.innerHTML='<div class="ac-mbox"><button class="ac-mx" aria-label="close">×</button><div id="acCheckout"></div></div>';document.body.appendChild(m);
+      var co=await stripe.initEmbeddedCheckout({fetchClientSecret:function(){return Promise.resolve(r.data.clientSecret)}});co.mount('#acCheckout');
+      m.querySelector('.ac-mx').onclick=function(){try{co.destroy()}catch(e){}m.remove()};
+    }catch(e){alert(T.err+(e.message||e))}
+    btn.disabled=false;btn.classList.remove('busy');
+  }
+  async function afterPay(){
+    var q=new URLSearchParams(location.search);if(!q.get('paid')||!q.get('session_id'))return;
+    history.replaceState(null,'',location.pathname);
+    try{await sb.functions.invoke('checkout',{body:{shipment_id:+q.get('paid'),action:'confirm',session_id:q.get('session_id'),lang:L}})}catch(e){}
+    await load();var m=document.createElement('p');m.className='ac-msg good';m.textContent=T.paid_ok;rootA.insertBefore(m,rootA.firstChild);
   }
   async function signOut(){await sb.auth.signOut();try{localStorage.removeItem('syc_code')}catch(e){}location.href=ACC}
   function render(){
@@ -163,7 +183,7 @@
     else h+=ships.map(function(s){var cnt=parcels.filter(function(p){return p.shipment_id===s.id}).length;
       return '<div class="ac-ship"><div class="ac-sh1"><b>'+T.sh+' #'+s.id+'</b> · '+fmtD(s.created_at)+' · '+(T.m[s.method]||s.method)+(cnt?' · '+cnt+' 📦':'')+'<span class="ac-pill s-'+s.status+'">'+(T.ss[s.status]||s.status)+'</span></div>'+
         '<div class="ac-sh2">'+esc([s.ship_name,s.ship_city,s.ship_country].filter(Boolean).join(', '))+(s.weight_kg?' · '+s.weight_kg+' kg':'')+'</div>'+
-        (s.price_rm?'<div class="ac-sh3">'+T.price+': <b>'+rm(s.price_rm)+'</b>'+(s.payment_link&&s.status==='quoted'?' <a class="syc-btn ac-pay" href="'+esc(s.payment_link)+'" target="_blank" rel="noopener">'+T.pay+'</a>':'')+'</div>':'')+
+        (s.price_rm?'<div class="ac-sh3">'+T.price+': <b>'+rm(s.price_rm)+'</b>'+(s.status==='quoted'?(C.stripePk?' <button class="syc-btn ac-pay" data-pay="'+s.id+'">'+T.pay+'</button>':(s.payment_link?' <a class="syc-btn ac-pay" href="'+esc(s.payment_link)+'" target="_blank" rel="noopener">'+T.pay+'</a>':'')):'')+'</div>':'')+
         (s.tracking_no?'<div class="ac-sh3">'+T.tracking+': '+(s.tracking_url?'<a href="'+esc(s.tracking_url)+'" target="_blank" rel="noopener" dir="ltr">'+esc((s.carrier?s.carrier+' ':'')+s.tracking_no)+'</a>':'<span dir="ltr">'+esc((s.carrier?s.carrier+' ':'')+s.tracking_no)+'</span>')+'</div>':'')+
         (s.status==='requested'?'<button class="ac-link" data-cancel="'+s.id+'">'+T.cancel_req+'</button>':'')+'</div>'}).join('');
     h+='</div>';
@@ -173,6 +193,7 @@
     rootA.innerHTML=h;bind(v);
   }
   function bind(v){
+    rootA.querySelectorAll('[data-pay]').forEach(function(b){b.onclick=function(){pay(+b.getAttribute('data-pay'),b)}});
     $('#acOut').onclick=signOut;
     var txt=T.k.map(function(k,i){return k+': '+v[i]}).join('\n');
     var cb=$('#acCopy');cb.onclick=function(){function ok(){cb.textContent=T.copied;setTimeout(function(){cb.textContent=T.copy},2000)}
@@ -214,5 +235,5 @@
   /* ---------- start ---------- */
   sb.auth.onAuthStateChange(function(ev){if(ev==='PASSWORD_RECOVERY'&&rootA){mode='reset';note=null;authCard(rootA,false)}});
   if(rootS){mode='signup';sb.auth.getSession().then(function(s){if(s.data&&s.data.session){rootS.innerHTML='<div class="ac-card ac-auth"><p>'+T.hello+'</p><a class="syc-btn" href="'+ACC+'">'+T.go_acc+'</a></div>'}else authCard(rootS,true)})}
-  if(rootA){if(/type=recovery/.test(location.hash)){mode='reset';setTimeout(function(){authCard(rootA,false)},300)}else load()}
+  if(rootA){if(/type=recovery/.test(location.hash)){mode='reset';setTimeout(function(){authCard(rootA,false)},300)}else{var q=new URLSearchParams(location.search);if(q.get('paid'))afterPay();else load()}}
 })();
