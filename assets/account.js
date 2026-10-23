@@ -24,7 +24,7 @@
    err_email:'Please enter a valid email.',err_pw:'Use at least 8 characters.',err_pw2:'The passwords don\'t match.',err_req:'Please fill in the required fields.',
    err_login:'Email or password is not correct.',err_confirm:'Please confirm your email first (check your inbox).',err_exists:'This email already has an account. Sign in instead.',err_rate:'Too many attempts. Wait a minute and try again.',
    err:'Something went wrong: ',err_load:'The account service could not load. Check your connection and refresh.',
-   wa_msg:'Hi Ship Your Cart 👋 My customer code is ',go_acc:'Go to my account',photo:'Photo'},
+   wa_msg:'Hi Ship Your Cart My customer code is ',go_acc:'Go to my account',photo:'Photo'},
   ar:{signin:'تسجيل الدخول',signup:'حساب جديد',email:'الإيميل',pw:'كلمة المرور',pw2:'أعد كلمة المرور',name:'الاسم الكامل',wa:'رقم الواتساب',country:'الدولة',
    forgot:'نسيت كلمة المرور؟',send_reset:'أرسل رابط التعيين',back:'رجوع لتسجيل الدخول',have:'عندك حساب؟',noacc:'جديد عندنا؟',
    free:'الحساب مجاني، وتدفع فقط لما نشحن.',newpw:'اختر كلمة مرور جديدة',save:'حفظ',signout:'تسجيل الخروج',
@@ -42,7 +42,7 @@
    err_email:'اكتب إيميل صحيح.',err_pw:'استخدم 8 أحرف على الأقل.',err_pw2:'كلمتا المرور غير متطابقتين.',err_req:'عبّ الحقول المطلوبة.',
    err_login:'الإيميل أو كلمة المرور غير صحيحة.',err_confirm:'أكّد إيميلك أولاً (شيك بريدك).',err_exists:'هذا الإيميل له حساب. سجّل الدخول بداله.',err_rate:'محاولات كثيرة. انتظر دقيقة وحاول مرة ثانية.',
    err:'صار خطأ: ',err_load:'تعذّر تحميل خدمة الحساب. تأكد من اتصالك وحدّث الصفحة.',
-   wa_msg:'هلا Ship Your Cart 👋 كود العميل حقي ',go_acc:'روح لحسابي',photo:'صورة'},
+   wa_msg:'هلا Ship Your Cart كود العميل حقي ',go_acc:'روح لحسابي',photo:'صورة'},
   ms:{signin:'Log masuk',signup:'Buka akaun',email:'E-mel',pw:'Kata laluan',pw2:'Ulang kata laluan',name:'Nama penuh',wa:'Nombor WhatsApp',country:'Negara',
    forgot:'Lupa kata laluan?',send_reset:'Hantar pautan',back:'Kembali ke log masuk',have:'Sudah ada akaun?',noacc:'Baru di sini?',
    free:'Akaun percuma — anda hanya bayar apabila kami menghantar.',newpw:'Tetapkan kata laluan baharu',save:'Simpan',signout:'Log keluar',
@@ -60,7 +60,7 @@
    err_email:'Masukkan e-mel yang sah.',err_pw:'Gunakan sekurang-kurangnya 8 aksara.',err_pw2:'Kata laluan tidak sama.',err_req:'Sila isi ruangan wajib.',
    err_login:'E-mel atau kata laluan salah.',err_confirm:'Sila sahkan e-mel anda dahulu.',err_exists:'E-mel ini sudah ada akaun. Sila log masuk.',err_rate:'Terlalu banyak cubaan. Tunggu seminit.',
    err:'Ralat: ',err_load:'Perkhidmatan akaun tidak dapat dimuatkan. Semak sambungan dan muat semula.',
-   wa_msg:'Hai Ship Your Cart 👋 Kod pelanggan saya ',go_acc:'Ke akaun saya',photo:'Gambar'}
+   wa_msg:'Hai Ship Your Cart Kod pelanggan saya ',go_acc:'Ke akaun saya',photo:'Gambar'}
   }[L];
   var $=function(s,r){return (r||document).querySelector(s)};
   var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
@@ -207,12 +207,12 @@
       var r=await sb.rpc('request_shipment',{p_parcels:ids.map(Number),p_method:g('rqM'),p_name:g('rqName'),p_phone:g('rqPhone'),p_address:g('rqAddr'),p_city:g('rqCity'),p_country:g('rqCountry'),p_note:g('rqNote')});
       if(r.error){b.disabled=false;$('#rqMsg').className='ac-msg bad';$('#rqMsg').textContent=friendly(r.error.message);return}
       sel={};await load();var m=document.createElement('p');m.className='ac-msg good';m.textContent=T.req_ok;rootA.insertBefore(m,rootA.firstChild);
-      window.open(waLink(T.wa_msg+me.code+' — '+T.sh+' #'+r.data),'_blank');
+      window.open(waLink(T.wa_msg+me.code+' - '+T.sh+' #'+r.data),'_blank');
     };
   }
 
   /* ---------- start ---------- */
   sb.auth.onAuthStateChange(function(ev){if(ev==='PASSWORD_RECOVERY'&&rootA){mode='reset';note=null;authCard(rootA,false)}});
-  if(rootS){mode='signup';sb.auth.getSession().then(function(s){if(s.data&&s.data.session){rootS.innerHTML='<div class="ac-card ac-auth"><p>'+T.hello+' 👋</p><a class="syc-btn" href="'+ACC+'">'+T.go_acc+'</a></div>'}else authCard(rootS,true)})}
+  if(rootS){mode='signup';sb.auth.getSession().then(function(s){if(s.data&&s.data.session){rootS.innerHTML='<div class="ac-card ac-auth"><p>'+T.hello+'</p><a class="syc-btn" href="'+ACC+'">'+T.go_acc+'</a></div>'}else authCard(rootS,true)})}
   if(rootA){if(/type=recovery/.test(location.hash)){mode='reset';setTimeout(function(){authCard(rootA,false)},300)}else load()}
 })();

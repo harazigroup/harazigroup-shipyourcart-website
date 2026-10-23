@@ -57,7 +57,7 @@
     var all=[];ps.forEach(function(p){all=all.concat(p.photos||[])});await signed(all);
     var h=(flash?'<p class="ac-msg good">'+flash+'</p>':'')+'<button class="ac-link" id="bk">→ رجوع للعملاء</button>';
     h+='<div class="ac-card"><div class="ac-top"><div><div class="ac-code">'+esc(c.code)+'</div><div class="ac-hello">'+esc(c.full_name)+'</div><div class="ac-muted"><span dir="ltr">'+esc(c.email)+'</span> · '+esc(c.country)+' · منذ '+fmtD(c.created_at)+'</div></div>'+
-      (c.whatsapp?'<a class="ac-wa" target="_blank" rel="noopener" href="'+waLink(c.whatsapp,'هلا '+c.full_name+' 👋 معك Ship Your Cart. ')+'" dir="ltr">'+esc(c.whatsapp)+'</a>':'')+'</div>'+
+      (c.whatsapp?'<a class="ac-wa" target="_blank" rel="noopener" href="'+waLink(c.whatsapp,'هلا '+c.full_name+' معك Ship Your Cart. ')+'" dir="ltr">'+esc(c.whatsapp)+'</a>':'')+'</div>'+
       '<label class="ac-l">ملاحظة داخلية</label><textarea class="ac-i" id="cn" rows="2">'+esc(c.admin_note||'')+'</textarea><button class="ac-link" id="cns">حفظ الملاحظة</button></div>';
     h+='<div class="ac-card"><h3 class="ac-h">استلام طرد جديد لـ '+esc(c.code)+'</h3>'+parcelForm()+'</div>';
     h+='<div class="ac-card"><h3 class="ac-h">الطرود ('+ps.length+')</h3>'+(ps.length?ps.map(parcelRow).join(''):'<p class="ac-empty">ما فيه طرود.</p>')+'</div>';
@@ -90,7 +90,7 @@
       for(var i=0;i<files.length;i++){$('#pfM').textContent='رفع الصور '+(i+1)+'/'+files.length+'...';var blob=await shrink(files[i]);var path=c.id+'/'+p.id+'/'+Date.now()+'-'+i+'.jpg';
         var u=await sb.storage.from('parcel-photos').upload(path,blob,{contentType:blob.type||'image/jpeg',upsert:false});if(!u.error)paths.push(path)}
       if(paths.length)await sb.from('parcels').update({photos:paths}).eq('id',p.id);
-      var msg='هلا '+c.full_name+' 👋\nوصل طردك لمستودع Ship Your Cart ✅\nرقم الطرد: #'+p.id+(p.store?'\nالمتجر: '+p.store:'')+'\nالوزن: '+p.weight_kg+' كجم\nتقدر تشوف الصور وتطلب الشحن من حسابك: '+location.origin+'/ar/account/';
+      var msg='هلا '+c.full_name+'\nوصل طردك لمستودع Ship Your Cart\nرقم الطرد: #'+p.id+(p.store?'\nالمتجر: '+p.store:'')+'\nالوزن: '+p.weight_kg+' كجم\nتقدر تشوف الصور وتطلب الشحن من حسابك: '+location.origin+'/ar/account/';
       done('تم حفظ الطرد #'+p.id+(c.whatsapp?' — <a target="_blank" rel="noopener" href="'+waLink(c.whatsapp,msg)+'">بلّغ العميل على الواتساب</a>':''));
     };
   }
@@ -146,11 +146,11 @@
         if(up.price_rm&&up.status==='requested'){up.status='quoted';$('[data-k="status"]',card).value='quoted'}
         var r=await sb.from('shipments').update(up).eq('id',id);$('[data-smsg]',card).textContent=r.error?r.error.message:'تم الحفظ ✓';if(!r.error)setTimeout(done,700)};
       $('[data-swa]',card).onclick=function(){var st=val('status'),n=card.getAttribute('data-name'),acc=location.origin+'/ar/account/',t;
-        if(st==='quoted')t='هلا '+n+' 👋\nشحنتك #'+id+' جاهزة للشحن ✈️\nالوزن: '+val('weight_kg')+' كجم\nالسعر: RM '+val('price_rm')+(val('payment_link')?'\nرابط الدفع: '+val('payment_link'):'')+'\nأو ادفع من حسابك: '+acc;
-        else if(st==='paid')t='هلا '+n+' 👋\nاستلمنا الدفع لشحنتك #'+id+' ✅ بنشحنها قريب ونرسل لك رقم التتبع.';
-        else if(st==='shipped')t='هلا '+n+' 👋\nتم شحن شحنتك #'+id+' 🚚'+(val('tracking_no')?'\nرقم التتبع: '+(val('carrier')?val('carrier')+' ':'')+val('tracking_no'):'')+(val('tracking_url')?'\n'+val('tracking_url'):'');
-        else if(st==='delivered')t='هلا '+n+' 👋\nوصلت شحنتك #'+id+' بالسلامة ✅ شكراً لاختيارك Ship Your Cart 🧡';
-        else t='هلا '+n+' 👋 بخصوص شحنتك #'+id+' من Ship Your Cart: ';
+        if(st==='quoted')t='هلا '+n+'\nشحنتك #'+id+' جاهزة للشحن\nالوزن: '+val('weight_kg')+' كجم\nالسعر: RM '+val('price_rm')+(val('payment_link')?'\nرابط الدفع: '+val('payment_link'):'')+'\nأو ادفع من حسابك: '+acc;
+        else if(st==='paid')t='هلا '+n+'\nاستلمنا الدفع لشحنتك #'+id+' بنشحنها قريب ونرسل لك رقم التتبع.';
+        else if(st==='shipped')t='هلا '+n+'\nتم شحن شحنتك #'+id+''+(val('tracking_no')?'\nرقم التتبع: '+(val('carrier')?val('carrier')+' ':'')+val('tracking_no'):'')+(val('tracking_url')?'\n'+val('tracking_url'):'');
+        else if(st==='delivered')t='هلا '+n+'\nوصلت شحنتك #'+id+' بالسلامة شكراً لاختيارك Ship Your Cart';
+        else t='هلا '+n+' بخصوص شحنتك #'+id+' من Ship Your Cart: ';
         var num=card.getAttribute('data-wa');window.open(num?waLink(num,t):'https://api.whatsapp.com/send?text='+encodeURIComponent(t),'_blank')};
     });
   }
