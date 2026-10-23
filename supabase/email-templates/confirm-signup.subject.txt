@@ -1,0 +1,1 @@
+{{ if eq .Data.lang "ar" }}أكّد إيميلك في Ship Your Cart{{ else if eq .Data.lang "ms" }}Sahkan e-mel Ship Your Cart anda{{ else }}Confirm your Ship Your Cart email{{ end }}

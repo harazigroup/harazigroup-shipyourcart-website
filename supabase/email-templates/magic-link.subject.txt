@@ -1,0 +1,1 @@
+{{ if eq .Data.lang "ar" }}رابط الدخول إلى Ship Your Cart{{ else if eq .Data.lang "ms" }}Pautan log masuk Ship Your Cart{{ else }}Your Ship Your Cart sign-in link{{ end }}
