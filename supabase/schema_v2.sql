@@ -33,8 +33,8 @@ create extension if not exists pg_net;
 create or replace function public.call_notify() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
-  if tg_op = 'UPDATE' and tg_table_name = 'shipments' and new.status is not distinct from old.status then
-    return new;
+  if tg_op = 'UPDATE' then
+    if new.status is not distinct from old.status then return new; end if;
   end if;
   begin
     perform net.http_post(
