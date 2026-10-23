@@ -327,3 +327,13 @@ button.ac-pay{border:0;cursor:pointer}
 select.ac-i{appearance:auto}
 
 .syc-signin{margin:14px 0 0;color:#ddd3ff;font-size:15px}.syc-signin a{color:#fff;font-weight:700;text-decoration:underline}
+
+.syc-pay{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;max-width:1200px;margin:0 auto;padding:22px 24px;border-top:1px solid rgba(255,255,255,.1)}
+.syc-pay-t{display:flex;align-items:center;gap:8px;color:#cfc3f5;font-size:14px;font-weight:600}
+.syc-pay-s{display:inline-flex;align-items:center;background:#fff;border-radius:8px;height:30px;padding:0 10px 0 2px;overflow:hidden}
+.syc-pay-s img{height:30px;width:auto}.syc-pay-s b{color:#635BFF;font:800 16px/1 Arial,Helvetica,sans-serif;letter-spacing:-.3px}
+.syc-pay-l{display:flex;flex-wrap:wrap;gap:8px}
+.syc-pay-b{display:inline-flex;background:#fff;border-radius:8px;height:38px;width:60px;align-items:center;justify-content:center;overflow:hidden}
+.syc-pay-b img{display:block;width:60px;height:38px}
+@media (max-width:767px){.syc-pay{justify-content:center;text-align:center}.syc-pay-t{justify-content:center;flex-wrap:wrap}.syc-pay-l{justify-content:center}}
+.syc-pay{margin-top:52px}.syc-pay+.syc-copy{margin-top:0}
