@@ -79,7 +79,7 @@
     if(/at least|weak/i.test(m))return T.err_pw;
     return T.err+esc(m)}
   function field(id,label,type,val,req,ac){return '<label class="ac-l" for="'+id+'">'+label+(req?' *':'')+'</label><input class="ac-i" id="'+id+'" type="'+(type||'text')+'" value="'+esc(val||'')+'"'+(req?' required':'')+(ac?' autocomplete="'+ac+'"':'')+(type==='email'||type==='tel'?' dir="ltr"':'')+'>'}
-  function waLink(text){return 'https://wa.me/'+WA+'?text='+encodeURIComponent(text)}
+  function waLink(text){return 'https://api.whatsapp.com/send?phone='+WA+'&text='+encodeURIComponent(text)}
 
   /* ---------- auth card ---------- */
   var mode='signin',note=null,lastEmail='';

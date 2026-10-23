@@ -8,7 +8,7 @@
   var SST={requested:'طلب جديد',quoted:'تم التسعير',paid:'مدفوع',shipped:'تم الشحن',delivered:'تم التسليم',cancelled:'ملغى'};
   var MT={air:'جوي',sea:'بحري',land:'بري',express:'سريع'};
   var waNum=function(n){return String(n||'').replace(/[^0-9]/g,'')};
-  var waLink=function(n,t){return 'https://wa.me/'+waNum(n)+'?text='+encodeURIComponent(t)};
+  var waLink=function(n,t){return 'https://api.whatsapp.com/send?phone='+waNum(n)+'&text='+encodeURIComponent(t)};
   if(!window.supabase){root.innerHTML='<p class="ac-msg bad">تعذّر تحميل الخدمة. حدّث الصفحة.</p>';return}
   var sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,detectSessionInUrl:true}});
   var urls={};
@@ -90,7 +90,7 @@
       for(var i=0;i<files.length;i++){$('#pfM').textContent='رفع الصور '+(i+1)+'/'+files.length+'...';var blob=await shrink(files[i]);var path=c.id+'/'+p.id+'/'+Date.now()+'-'+i+'.jpg';
         var u=await sb.storage.from('parcel-photos').upload(path,blob,{contentType:blob.type||'image/jpeg',upsert:false});if(!u.error)paths.push(path)}
       if(paths.length)await sb.from('parcels').update({photos:paths}).eq('id',p.id);
-      var msg='هلا '+c.full_name+' 👋\nوصل طردك لمستودع Ship Your Cart ✅\nرقم الطرد: #'+p.id+(p.store?'\nالمتجر: '+p.store:'')+'\nالوزن: '+p.weight_kg+' كجم\nتقدر تشوف الصور وتطلب الشحن من حسابك: https://shipyourcart.com.my/ar/account/';
+      var msg='هلا '+c.full_name+' 👋\nوصل طردك لمستودع Ship Your Cart ✅\nرقم الطرد: #'+p.id+(p.store?'\nالمتجر: '+p.store:'')+'\nالوزن: '+p.weight_kg+' كجم\nتقدر تشوف الصور وتطلب الشحن من حسابك: '+location.origin+'/ar/account/';
       done('تم حفظ الطرد #'+p.id+(c.whatsapp?' — <a target="_blank" rel="noopener" href="'+waLink(c.whatsapp,msg)+'">بلّغ العميل على الواتساب</a>':''));
     };
   }
@@ -145,13 +145,13 @@
         weight_kg:val('weight_kg')===''?null:+val('weight_kg'),price_rm:val('price_rm')===''?null:+val('price_rm')};
         if(up.price_rm&&up.status==='requested'){up.status='quoted';$('[data-k="status"]',card).value='quoted'}
         var r=await sb.from('shipments').update(up).eq('id',id);$('[data-smsg]',card).textContent=r.error?r.error.message:'تم الحفظ ✓';if(!r.error)setTimeout(done,700)};
-      $('[data-swa]',card).onclick=function(){var st=val('status'),n=card.getAttribute('data-name'),acc='https://shipyourcart.com.my/ar/account/',t;
+      $('[data-swa]',card).onclick=function(){var st=val('status'),n=card.getAttribute('data-name'),acc=location.origin+'/ar/account/',t;
         if(st==='quoted')t='هلا '+n+' 👋\nشحنتك #'+id+' جاهزة للشحن ✈️\nالوزن: '+val('weight_kg')+' كجم\nالسعر: RM '+val('price_rm')+(val('payment_link')?'\nرابط الدفع: '+val('payment_link'):'')+'\nأو ادفع من حسابك: '+acc;
         else if(st==='paid')t='هلا '+n+' 👋\nاستلمنا الدفع لشحنتك #'+id+' ✅ بنشحنها قريب ونرسل لك رقم التتبع.';
         else if(st==='shipped')t='هلا '+n+' 👋\nتم شحن شحنتك #'+id+' 🚚'+(val('tracking_no')?'\nرقم التتبع: '+(val('carrier')?val('carrier')+' ':'')+val('tracking_no'):'')+(val('tracking_url')?'\n'+val('tracking_url'):'');
         else if(st==='delivered')t='هلا '+n+' 👋\nوصلت شحنتك #'+id+' بالسلامة ✅ شكراً لاختيارك Ship Your Cart 🧡';
         else t='هلا '+n+' 👋 بخصوص شحنتك #'+id+' من Ship Your Cart: ';
-        var num=card.getAttribute('data-wa');window.open(num?waLink(num,t):'https://wa.me/?text='+encodeURIComponent(t),'_blank')};
+        var num=card.getAttribute('data-wa');window.open(num?waLink(num,t):'https://api.whatsapp.com/send?text='+encodeURIComponent(t),'_blank')};
     });
   }
   start();
