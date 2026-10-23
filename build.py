@@ -22,7 +22,15 @@ SUPABASE_KEY = 'sb_publishable_gQveLo1t1IwFtuda2gOxpg_NxsCrWHg'
 SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js'
 # Stripe publishable key (pk_live_... — public). Empty = use the payment link set in the admin page.
 STRIPE_PK = 'pk_live_51RrCUh0XHIOHPnxGxHo2KGulu5p4iYkxlyVf1k9uWjbE0qP0fB2rbPQQi1Mdvm8xPr8YLrmZl9QUBvQE8PcXuJuc00SXtEERut'
-VER = date.today().strftime('%Y%m%d')
+def _ver():
+    import hashlib
+    h = hashlib.sha1()
+    for f in sorted(os.listdir(os.path.join(ROOT, 'assets'))):
+        fp = os.path.join(ROOT, 'assets', f)
+        if os.path.isfile(fp):
+            h.update(open(fp, 'rb').read())
+    return h.hexdigest()[:10]
+VER = _ver()  # changes whenever a CSS/JS file changes, so browsers fetch the new version
 
 def read(*p):
     return open(os.path.join(SRC, *p), encoding='utf-8').read()

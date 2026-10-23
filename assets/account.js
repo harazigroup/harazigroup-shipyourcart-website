@@ -139,7 +139,7 @@
   async function load(){
     var s;try{s=await Promise.race([sb.auth.getSession(),new Promise(function(_,r){setTimeout(function(){r(new Error('timeout'))},10000)})])}catch(e){mode='signin';note=['bad',T.err+esc(e.message)];return authCard(rootA,false)}
     var sess=s.data&&s.data.session;
-    if(!sess){mode=mode==='reset'?'reset':'signin';return authCard(rootA,false)}
+    if(!sess){if(mode!=='reset'&&mode!=='signup')mode='signin';return authCard(rootA,false)}
     var r=await sb.from('customers').select('*').eq('id',sess.user.id).maybeSingle();
     if(r.error||!r.data){rootA.innerHTML='<p class="ac-msg bad">'+T.err+esc(r.error?r.error.message:'no profile')+'</p><button class="ac-link" id="acOut">'+T.signout+'</button>';$('#acOut').onclick=signOut;return}
     me=r.data;try{localStorage.setItem('syc_code',me.code)}catch(e){}
