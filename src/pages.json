@@ -152,5 +152,19 @@
    "title": "Akaun saya | Ship Your Cart",
    "description": "Log masuk untuk melihat alamat Malaysia, bungkusan dan penghantaran anda."
   }
+ },
+ "amazon-fba-prep": {
+  "ar": {
+   "title": "تجهيز وشحن أمازون FBA من ماليزيا | Ship Your Cart",
+   "description": "نستلم منتجاتك في ماليزيا ونفحصها ونلصق باركود FNSKU ونغلّفها ونجهّز الباقات، ثم نشحنها إلى أي مستودع أمازون FBA في السعودية والإمارات والعالم."
+  },
+  "ms": {
+   "title": "Persediaan dan penghantaran Amazon FBA dari Malaysia | Ship Your Cart",
+   "description": "Kami terima, periksa, label FNSKU, bungkus dan sediakan set produk anda di Malaysia, kemudian hantar ke mana-mana gudang Amazon FBA di dunia."
+  },
+  "en": {
+   "title": "Amazon FBA prep service in Malaysia: labeling, bundling, shipping | Ship Your Cart",
+   "description": "Amazon FBA prep center in Malaysia: receiving, inspection, FNSKU labeling, poly bagging, bundling and shipping to any Amazon FBA warehouse worldwide."
+  }
  }
 }
