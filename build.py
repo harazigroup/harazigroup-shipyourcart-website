@@ -21,7 +21,7 @@ SUPABASE_URL = 'https://lmwpilpcuxyzpygylclq.supabase.co'
 SUPABASE_KEY = 'sb_publishable_gQveLo1t1IwFtuda2gOxpg_NxsCrWHg'
 SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js'
 # Stripe publishable key (pk_live_... — public). Empty = use the payment link set in the admin page.
-STRIPE_PK = ''
+STRIPE_PK = 'pk_live_51RrCUh0XHIOHPnxGxHo2KGulu5p4iYkxlyVf1k9uWjbE0qP0fB2rbPQQi1Mdvm8xPr8YLrmZl9QUBvQE8PcXuJuc00SXtEERut'
 VER = date.today().strftime('%Y%m%d')
 
 def read(*p):
