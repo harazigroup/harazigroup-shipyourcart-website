@@ -36,11 +36,15 @@ begin
   if tg_op = 'UPDATE' and tg_table_name = 'shipments' and new.status is not distinct from old.status then
     return new;
   end if;
-  perform net.http_post(
-    url := 'https://lmwpilpcuxyzpygylclq.supabase.co/functions/v1/notify',
-    body := jsonb_build_object('table', tg_table_name, 'id', new.id),
-    headers := '{"Content-Type":"application/json"}'::jsonb
-  );
+  begin
+    perform net.http_post(
+      url := 'https://lmwpilpcuxyzpygylclq.supabase.co/functions/v1/notify',
+      body := jsonb_build_object('table', tg_table_name, 'id', new.id),
+      headers := '{"Content-Type":"application/json"}'::jsonb
+    );
+  exception when others then
+    raise warning 'notify call failed: %', sqlerrm;  -- never block sign-ups or saves
+  end;
   return new;
 end $$;
 
