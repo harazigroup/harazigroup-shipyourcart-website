@@ -249,5 +249,5 @@
   /* ---------- start ---------- */
   sb.auth.onAuthStateChange(function(ev){if(ev==='PASSWORD_RECOVERY'&&rootA){mode='reset';note=null;authCard(rootA,false)}});
   if(rootS){mode='signup';sb.auth.getSession().then(function(s){if(s.data&&s.data.session){rootS.innerHTML='<div class="ac-card ac-auth"><p>'+T.hello+'</p><a class="syc-btn" href="'+ACC+'">'+T.go_acc+'</a></div>'}else authCard(rootS,true)})}
-  if(rootA){if(/type=recovery/.test(location.hash)){mode='reset';setTimeout(function(){authCard(rootA,false)},300)}else{var q=new URLSearchParams(location.search);if(q.get('paid'))afterPay();else load()}}
+  if(rootA){if(/type=recovery/.test(location.hash)){mode='reset';setTimeout(function(){authCard(rootA,false)},300)}else{var q=new URLSearchParams(location.search);if(q.get('signup'))mode='signup';if(q.get('paid'))afterPay();else load()}}
 })();

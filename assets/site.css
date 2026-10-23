@@ -325,3 +325,5 @@ button.ac-pay{border:0;cursor:pointer}
 .ac-eye{position:absolute;top:50%;right:8px;left:auto;transform:translateY(-50%);border:0;background:transparent;font-size:18px;cursor:pointer;opacity:.5;padding:6px}
 .ac-eye.on{opacity:1}
 select.ac-i{appearance:auto}
+
+.syc-signin{margin:14px 0 0;color:#ddd3ff;font-size:15px}.syc-signin a{color:#fff;font-weight:700;text-decoration:underline}

@@ -6,5 +6,6 @@
   document.querySelectorAll('.syc-dd-t').forEach(function(t){t.setAttribute('role','button');t.addEventListener('click',function(e){e.preventDefault();var d=t.parentNode;closeAll(d);d.classList.toggle('open')})});
   document.addEventListener('click',function(e){if(!e.target.closest('.syc-dd'))closeAll(null);if(hdr&&!e.target.closest('.syc-hdr'))hdr.classList.remove('menu-open')});
   // header button shows the customer code when signed in (set by account.js)
-  try{var c=localStorage.getItem('syc_code');var a=document.querySelector('[data-acct]');if(c&&a)a.textContent=a.textContent+' · '+c}catch(e){}
+  var a=document.querySelector('[data-acct]'),c=null;try{c=localStorage.getItem('syc_code')}catch(e){}
+  if(a){if(c)a.textContent=a.textContent+' · '+c;else{var L=document.documentElement.lang||'en';a.textContent=/^ar/.test(L)?'سجّل مجاناً':/^ms/.test(L)?'Daftar percuma':'Sign up free';a.href=a.getAttribute('href')+'?signup=1'}}
 })();
