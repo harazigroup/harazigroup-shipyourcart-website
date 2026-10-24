@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="{{LANG0}}" dir="{{DIR0}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{NAME_EN}} | Ship Your Cart</title>
+<meta name="description" content="{{TITLE_EN}} at Ship Your Cart. Save contact, WhatsApp, call or email.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#2b1a5e">
+<meta property="og:title" content="{{NAME_EN}} · Ship Your Cart">
+<meta property="og:description" content="{{TITLE_EN}} · {{TITLE_AR}}">
+<meta property="og:image" content="https://shipyourcart.com.my/assets/img/og.jpg">
+<link rel="icon" type="image/png" href="/assets/img/icon-512.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f6f2ff;font-family:Tajawal,Arial,sans-serif;color:#22183f;display:flex;justify-content:center;padding:20px 16px 32px}
+.c{width:100%;max-width:420px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 50px -20px rgba(43,26,94,.35)}
+.top{position:relative;background:#2b1a5e;padding:22px 22px 64px;overflow:hidden}
+.top:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;border:34px solid rgba(255,255,255,.07);top:-120px;inset-inline-end:-90px}
+.top:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,#7a4fd0,#ff8a2a)}
+.bar{position:relative;display:flex;justify-content:space-between;align-items:center}
+.logo{background:#fff;border-radius:12px;padding:6px 10px;display:flex}
+.logo img{height:34px;width:auto;display:block}
+.sw{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+.sw button{border:0;background:none;color:#ddd3ff;font:700 13px Tajawal,Arial,sans-serif;padding:7px 12px;border-radius:999px;cursor:pointer;min-height:34px}
+.sw button.on{background:#fff;color:#2b1a5e}
+.av{position:relative;width:92px;height:92px;border-radius:50%;margin:-48px auto 0;background:linear-gradient(135deg,#7a4fd0,#ff8a2a);border:5px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font:800 32px Tajawal,Arial,sans-serif;letter-spacing:1px}
+.who{text-align:center;padding:12px 22px 4px}
+.who h1{margin:0;font-size:25px;line-height:1.2;font-weight:800}
+.who p{margin:6px 0 0;color:#e8731a;font-weight:700;font-size:16px}
+.who .co{color:#6f6690;font-weight:500;font-size:14px;margin-top:2px}
+.save{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px 22px 0;background:#ff8a2a;color:#fff;text-decoration:none;font-weight:800;font-size:17px;border-radius:999px;min-height:52px;box-shadow:0 12px 26px -12px rgba(255,138,42,.8)}
+.acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 22px 6px}
+.acts a{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:16px;background:#f3effd;color:#2b1a5e;text-decoration:none;font-weight:700;font-size:13.5px;min-height:72px;justify-content:center}
+.acts a.wa{background:#e7f8ee;color:#0f6b3a}
+.list{margin:10px 22px 0;border-top:1px solid #eee9fb}
+.list a,.list div{display:flex;align-items:center;gap:12px;padding:14px 2px;border-bottom:1px solid #eee9fb;color:#3b2f63;text-decoration:none;font-size:15px;font-weight:500}
+.list svg{flex:none}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.ft{text-align:center;color:#8a80ab;font-size:12.5px;padding:18px 22px 22px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main class="c">
+<div class="top"><div class="bar"><a class="logo" href="https://shipyourcart.com.my/"><img src="/assets/img/email-logo.png" alt="Ship Your Cart"></a>
+<div class="sw" role="group" aria-label="Language"><button type="button" data-l="ar">عربي</button><button type="button" data-l="en">EN</button></div></div></div>
+<div class="av" aria-hidden="true">{{INITIALS}}</div>
+{{BLOCKS}}
+</main>
+<script>
+(function(){
+  var b=document.querySelectorAll('[data-l]'),s=document.querySelectorAll('[data-lang]');
+  function set(l){s.forEach(function(e){e.hidden=e.getAttribute('data-lang')!==l});b.forEach(function(x){x.classList.toggle('on',x.getAttribute('data-l')===l)});
+    document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';try{localStorage.setItem('syc_card_l',l)}catch(e){}}
+  var l=null;try{l=localStorage.getItem('syc_card_l')}catch(e){}
+  if(!l)l=/^ar/i.test(navigator.language||'')?'ar':'en';
+  b.forEach(function(x){x.addEventListener('click',function(){set(x.getAttribute('data-l'))})});
+  set(l);
+})();
+</script>
+</body>
+</html>
