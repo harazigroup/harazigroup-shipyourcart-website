@@ -337,3 +337,14 @@ select.ac-i{appearance:auto}
 .syc-pay-b img{display:block;width:60px;height:38px}
 @media (max-width:767px){.syc-pay{justify-content:center;text-align:center}.syc-pay-t{justify-content:center;flex-wrap:wrap}.syc-pay-l{justify-content:center}}
 .syc-pay{margin-top:52px}.syc-pay+.syc-copy{margin-top:0}
+.ac-usdt{margin-inline-start:6px;padding:8px 14px;border-radius:999px;border:2px solid #26a17b;background:#fff;color:#1a7a5c;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+.ac-usdt:disabled{opacity:.6}
+.ac-u-amt{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f3effd;border-radius:14px;padding:14px 16px;margin:10px 0 4px;flex-wrap:wrap}
+.ac-u-amt b{font-size:24px;color:#2b1a5e}
+.ac-u-qr{display:flex;justify-content:center;margin:10px 0}
+.ac-u-qr img{border:1px solid #eee9fb;border-radius:12px;padding:6px;background:#fff}
+.ac-u-addr{display:flex;align-items:center;gap:10px;background:#f7f5fc;border-radius:12px;padding:10px 12px}
+.ac-u-addr code{flex:1;min-width:0;word-break:break-all;font-size:13.5px;color:#22183f}
+.ac-usdt-box{padding:44px 22px 22px}
+.tm-usdt{margin-top:8px;padding:10px 12px;border-radius:12px;background:#e9f7f2;color:#14563f;font-size:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tm-usdt a{color:#14563f;font-weight:700}

@@ -19,7 +19,7 @@
    method:'Method',m:{air:'Air',sea:'Sea',land:'Land',express:'Express'},rname:'Recipient name',rphone:'Recipient phone',raddr:'Address',rcity:'City',rcountry:'Country',note:'Note (optional)',
    submit:'Send request',cancel:'Cancel',req_ok:'Request sent. We will confirm the final price on WhatsApp.',
    ships:'My shipments',noships:'No shipments yet.',sh:'Shipment',ss:{requested:'Requested',quoted:'Price ready',paid:'Paid',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'},
-   price:'Price',pay:'Pay now',tracking:'Tracking',cancel_req:'Cancel request',profile:'My details',saved:'Saved ✓',
+   price:'Price',pay:'Pay now',pay_usdt:'Pay with USDT',u_title:'Pay with USDT (TRC20)',u_amt:'Amount to send',u_net:'Network',u_addr:'Our USDT address',u_warn:'Send USDT on the TRC20 (Tron) network only, and the exact amount. Other coins or networks cannot be recovered.',u_fee:'Network fees are paid by the sender.',u_rate:'Rate',u_tx:'Transaction ID (TxID)',u_send:'I have paid, submit',u_copy:'Copy',u_copied:'Copied',u_ok:'Thank you! We are checking your payment and will confirm it shortly by email.',u_pending:'USDT payment under review',u_wa:'Send us the TxID on WhatsApp',u_bad:'Please paste a valid TxID (64 characters).',u_used:'This TxID was already used.',u_norate:'Could not load the exchange rate. Please try again or contact us on WhatsApp.',tracking:'Tracking',cancel_req:'Cancel request',profile:'My details',saved:'Saved ✓',
    check_mail:'Almost done: we sent a confirmation link to ',check_mail2:'. Open it, then sign in.',reset_sent:'If an account exists, we sent a link to set a new password.',
    err_email:'Please enter a valid email.',err_pw:'Use at least 8 characters.',err_pw2:'The passwords don\'t match.',err_req:'Please fill in the required fields.',
    err_login:'Email or password is not correct.',err_confirm:'Please confirm your email first (check your inbox).',err_exists:'This email already has an account. Sign in instead.',err_rate:'Too many attempts. Wait a minute and try again.',
@@ -37,7 +37,7 @@
    method:'طريقة الشحن',m:{air:'جوي',sea:'بحري',land:'بري',express:'سريع'},rname:'اسم المستلم',rphone:'جوال المستلم',raddr:'العنوان',rcity:'المدينة',rcountry:'الدولة',note:'ملاحظة (اختياري)',
    submit:'أرسل الطلب',cancel:'إلغاء',req_ok:'تم إرسال طلبك. بنأكد لك السعر النهائي على الواتساب.',
    ships:'شحناتي',noships:'ما فيه شحنات للحين.',sh:'شحنة',ss:{requested:'تم الطلب',quoted:'السعر جاهز',paid:'تم الدفع',shipped:'تم الشحن',delivered:'تم التسليم',cancelled:'ملغاة'},
-   price:'السعر',pay:'ادفع الحين',tracking:'التتبع',cancel_req:'إلغاء الطلب',profile:'بياناتي',saved:'تم الحفظ ✓',
+   price:'السعر',pay:'ادفع الحين',pay_usdt:'ادفع USDT',u_title:'الدفع بـ USDT (شبكة TRC20)',u_amt:'المبلغ المطلوب',u_net:'الشبكة',u_addr:'عنوان محفظتنا',u_warn:'أرسل USDT على شبكة TRC20 (Tron) فقط، وبنفس المبلغ بالضبط. أي عملة أو شبكة ثانية ما نقدر نسترجعها.',u_fee:'رسوم الشبكة على المرسل.',u_rate:'سعر الصرف',u_tx:'رقم العملية (TxID)',u_send:'دفعت، أرسل رقم العملية',u_copy:'نسخ',u_copied:'تم النسخ',u_ok:'شكراً لك! نراجع الدفعة ونأكدها لك قريب على الإيميل.',u_pending:'دفعة USDT قيد المراجعة',u_wa:'أرسل لنا رقم العملية على الواتساب',u_bad:'الصق رقم عملية صحيح (64 حرف).',u_used:'رقم العملية هذا مستخدم من قبل.',u_norate:'ما قدرنا نجيب سعر الصرف. جرّب مرة ثانية أو تواصل معنا على الواتساب.',tracking:'التتبع',cancel_req:'إلغاء الطلب',profile:'بياناتي',saved:'تم الحفظ ✓',
    check_mail:'بقيت خطوة: أرسلنا رابط تأكيد إلى ',check_mail2:'. افتحه ثم سجّل الدخول.',reset_sent:'إذا كان عندك حساب، أرسلنا لك رابط لتعيين كلمة مرور جديدة.',
    err_email:'اكتب إيميل صحيح.',err_pw:'استخدم 8 أحرف على الأقل.',err_pw2:'كلمتا المرور غير متطابقتين.',err_req:'عبّ الحقول المطلوبة.',
    err_login:'الإيميل أو كلمة المرور غير صحيحة.',err_confirm:'أكّد إيميلك أولاً (شيك بريدك).',err_exists:'هذا الإيميل له حساب. سجّل الدخول بداله.',err_rate:'محاولات كثيرة. انتظر دقيقة وحاول مرة ثانية.',
@@ -55,7 +55,7 @@
    method:'Kaedah',m:{air:'Udara',sea:'Laut',land:'Darat',express:'Ekspres'},rname:'Nama penerima',rphone:'Telefon penerima',raddr:'Alamat',rcity:'Bandar',rcountry:'Negara',note:'Nota (pilihan)',
    submit:'Hantar permintaan',cancel:'Batal',req_ok:'Permintaan dihantar. Kami akan sahkan harga akhir melalui WhatsApp.',
    ships:'Penghantaran saya',noships:'Belum ada penghantaran.',sh:'Penghantaran',ss:{requested:'Diminta',quoted:'Harga sedia',paid:'Dibayar',shipped:'Dihantar',delivered:'Diterima',cancelled:'Dibatalkan'},
-   price:'Harga',pay:'Bayar sekarang',tracking:'Penjejakan',cancel_req:'Batal permintaan',profile:'Butiran saya',saved:'Disimpan ✓',
+   price:'Harga',pay:'Bayar sekarang',pay_usdt:'Bayar dengan USDT',u_title:'Bayar dengan USDT (TRC20)',u_amt:'Jumlah untuk dihantar',u_net:'Rangkaian',u_addr:'Alamat USDT kami',u_warn:'Hantar USDT pada rangkaian TRC20 (Tron) sahaja, dengan jumlah tepat. Syiling atau rangkaian lain tidak dapat dipulihkan.',u_fee:'Yuran rangkaian dibayar oleh penghantar.',u_rate:'Kadar',u_tx:'ID transaksi (TxID)',u_send:'Saya sudah bayar, hantar',u_copy:'Salin',u_copied:'Disalin',u_ok:'Terima kasih! Kami sedang menyemak bayaran anda dan akan mengesahkannya melalui e-mel.',u_pending:'Bayaran USDT sedang disemak',u_wa:'Hantar TxID kepada kami di WhatsApp',u_bad:'Sila tampal TxID yang sah (64 aksara).',u_used:'TxID ini sudah digunakan.',u_norate:'Kadar pertukaran tidak dapat dimuatkan. Cuba lagi atau hubungi kami di WhatsApp.',tracking:'Penjejakan',cancel_req:'Batal permintaan',profile:'Butiran saya',saved:'Disimpan ✓',
    check_mail:'Hampir siap: kami hantar pautan pengesahan ke ',check_mail2:'. Buka pautan itu, kemudian log masuk.',reset_sent:'Jika akaun wujud, kami telah hantar pautan untuk kata laluan baharu.',
    err_email:'Masukkan e-mel yang sah.',err_pw:'Gunakan sekurang-kurangnya 8 aksara.',err_pw2:'Kata laluan tidak sama.',err_req:'Sila isi ruangan wajib.',
    err_login:'E-mel atau kata laluan salah.',err_confirm:'Sila sahkan e-mel anda dahulu.',err_exists:'E-mel ini sudah ada akaun. Sila log masuk.',err_rate:'Terlalu banyak cubaan. Tunggu seminit.',
@@ -164,6 +164,42 @@
     }catch(e){alert(T.err+(e.message||e))}
     btn.disabled=false;btn.classList.remove('busy');
   }
+
+  var USDT_ADDR='TLcDHgGxPL1b4JiYUXEDMitr5zTVrfDg6n';
+  async function usdtRate(){
+    var ctl=new AbortController();setTimeout(function(){ctl.abort()},6000);
+    var r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=myr',{signal:ctl.signal});
+    var j=await r.json();var x=+(j&&j.tether&&j.tether.myr);if(!(x>1&&x<10))throw new Error('rate');return x}
+  async function payUsdt(id,priceRm,btn){
+    btn.disabled=true;var rate;
+    try{rate=await usdtRate()}catch(e){btn.disabled=false;alert(T.u_norate);return}
+    btn.disabled=false;
+    var amt=Math.ceil(priceRm/rate*100)/100,amtS=amt.toFixed(2);
+    var m=document.createElement('div');m.className='ac-modal';
+    m.innerHTML='<div class="ac-mbox ac-usdt-box"><button class="ac-mx" aria-label="close">×</button>'+
+      '<h3 class="ac-h">'+T.u_title+'</h3><p class="ac-muted">'+T.sh+' #'+id+' · '+rm(priceRm)+'</p>'+
+      '<div class="ac-u-amt"><span>'+T.u_amt+'</span><b dir="ltr">'+amtS+' USDT</b><button type="button" class="ac-link" data-cp="'+amtS+'">'+T.u_copy+'</button></div>'+
+      '<p class="ac-muted" style="text-align:center">'+T.u_rate+': <span dir="ltr">1 USDT = RM '+rate.toFixed(3)+'</span></p>'+
+      '<div class="ac-u-qr"><img src="/assets/img/usdt-trc20.svg" alt="QR" width="180" height="180"></div>'+
+      '<p class="ac-l">'+T.u_net+': <b dir="ltr">TRC20 (Tron)</b></p>'+
+      '<p class="ac-l">'+T.u_addr+'</p><div class="ac-u-addr"><code dir="ltr">'+USDT_ADDR+'</code><button type="button" class="ac-link" data-cp="'+USDT_ADDR+'">'+T.u_copy+'</button></div>'+
+      '<p class="ac-msg bad">'+T.u_warn+' '+T.u_fee+'</p>'+
+      '<form class="ac-form" id="acUForm"><label class="ac-l" for="acTx">'+T.u_tx+'</label><input class="ac-i" id="acTx" dir="ltr" autocomplete="off" spellcheck="false" required>'+
+      '<button class="syc-btn" type="submit">'+T.u_send+'</button><div id="acUMsg"></div></form></div>';
+    document.body.appendChild(m);
+    m.querySelector('.ac-mx').onclick=function(){m.remove()};
+    m.querySelectorAll('[data-cp]').forEach(function(b){b.onclick=function(){try{navigator.clipboard.writeText(b.getAttribute('data-cp'));var o=b.textContent;b.textContent=T.u_copied+' ✓';setTimeout(function(){b.textContent=o},1500)}catch(e){}}});
+    m.querySelector('#acUForm').onsubmit=async function(e){e.preventDefault();
+      var tx=m.querySelector('#acTx').value.trim().replace(/^0x/i,''),msg=m.querySelector('#acUMsg');
+      if(!/^[0-9a-fA-F]{64}$/.test(tx)){msg.innerHTML='<p class="ac-msg bad">'+T.u_bad+'</p>';return}
+      var sb2=e.submitter||m.querySelector('#acUForm .syc-btn');sb2.disabled=true;
+      var r=await sb.rpc('submit_usdt',{p_id:id,p_txid:tx,p_amount:amt});
+      if(r.error){sb2.disabled=false;msg.innerHTML='<p class="ac-msg bad">'+(/already used/.test(r.error.message)?T.u_used:T.err+esc(r.error.message))+'</p>';return}
+      var wa=waLink(T.sh+' #'+id+' · USDT '+amtS+'\nTxID: '+tx);
+      m.querySelector('.ac-usdt-box').innerHTML='<button class="ac-mx" aria-label="close">×</button><h3 class="ac-h">'+T.u_title+'</h3><p class="ac-msg good">'+T.u_ok+'</p><a class="ac-wa" href="'+wa+'" target="_blank" rel="noopener">'+T.u_wa+'</a>';
+      m.querySelector('.ac-mx').onclick=function(){m.remove();load()};
+    };
+  }
   async function afterPay(){
     var q=new URLSearchParams(location.search);if(!q.get('paid')||!q.get('session_id'))return;
     history.replaceState(null,'',location.pathname);
@@ -197,7 +233,7 @@
     else h+=ships.map(function(s){var cnt=parcels.filter(function(p){return p.shipment_id===s.id}).length;
       return '<div class="ac-ship"><div class="ac-sh1"><b>'+T.sh+' #'+s.id+'</b> · '+fmtD(s.created_at)+' · '+(T.m[s.method]||s.method)+(cnt?' · '+cnt+' 📦':'')+'<span class="ac-pill s-'+s.status+'">'+(T.ss[s.status]||s.status)+'</span></div>'+
         '<div class="ac-sh2">'+esc([s.ship_name,s.ship_city,s.ship_country].filter(Boolean).join(', '))+(s.weight_kg?' · '+s.weight_kg+' kg':'')+'</div>'+
-        (s.price_rm?'<div class="ac-sh3">'+T.price+': <b>'+rm(s.price_rm)+'</b>'+(s.status==='quoted'?(C.stripePk?' <button class="syc-btn ac-pay" data-pay="'+s.id+'">'+T.pay+'</button>':(s.payment_link?' <a class="syc-btn ac-pay" href="'+esc(s.payment_link)+'" target="_blank" rel="noopener">'+T.pay+'</a>':'')):'')+'</div>':'')+
+        (s.price_rm?'<div class="ac-sh3">'+T.price+': <b>'+rm(s.price_rm)+'</b>'+(s.status==='quoted'?(s.usdt_txid?' <span class="ac-pill s-requested">'+T.u_pending+'</span>':(C.stripePk?' <button class="syc-btn ac-pay" data-pay="'+s.id+'">'+T.pay+'</button>':(s.payment_link?' <a class="syc-btn ac-pay" href="'+esc(s.payment_link)+'" target="_blank" rel="noopener">'+T.pay+'</a>':''))+' <button class="ac-usdt" data-usdt="'+s.id+'" data-rm="'+s.price_rm+'">'+T.pay_usdt+'</button>'):'')+'</div>':'')+
         (s.tracking_no?'<div class="ac-sh3">'+T.tracking+': '+(s.tracking_url?'<a href="'+esc(s.tracking_url)+'" target="_blank" rel="noopener" dir="ltr">'+esc((s.carrier?s.carrier+' ':'')+s.tracking_no)+'</a>':'<span dir="ltr">'+esc((s.carrier?s.carrier+' ':'')+s.tracking_no)+'</span>')+'</div>':'')+
         (s.status==='requested'?'<button class="ac-link" data-cancel="'+s.id+'">'+T.cancel_req+'</button>':'')+'</div>'}).join('');
     h+='</div>';
@@ -208,6 +244,7 @@
   }
   function bind(v){
     rootA.querySelectorAll('[data-pay]').forEach(function(b){b.onclick=function(){pay(+b.getAttribute('data-pay'),b)}});
+    rootA.querySelectorAll('[data-usdt]').forEach(function(b){b.onclick=function(){payUsdt(+b.getAttribute('data-usdt'),+b.getAttribute('data-rm'),b)}});
     $('#acOut').onclick=signOut;
     var txt=T.k.map(function(k,i){return k+': '+v[i]}).join('\n');
     var cb=$('#acCopy');cb.onclick=function(){function ok(){cb.textContent=T.copied;setTimeout(function(){cb.textContent=T.copy},2000)}

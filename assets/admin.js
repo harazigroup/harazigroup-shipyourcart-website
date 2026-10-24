@@ -135,6 +135,7 @@
       '<div class="ac-sh2">📍 '+esc([s.ship_name,s.ship_phone,s.ship_address,s.ship_city,s.ship_country].filter(Boolean).join(' · '))+'</div>'+
       '<div class="ac-sh2">📦 '+mine.map(function(p){return '#'+p.id+' ('+(p.weight_kg||'?')+' كجم)'}).join('، ')+' — المجموع '+kg.toFixed(2)+' كجم'+(vol?' · حجمي '+vol.toFixed(2):'')+'</div>'+
       (s.customer_note?'<div class="ac-sh2">💬 '+esc(s.customer_note)+'</div>':'')+
+      (s.usdt_txid?'<div class="tm-usdt"><b>دفع USDT</b> <span dir="ltr">'+(s.usdt_amount||'?')+' USDT</span> · '+fmtD(s.usdt_submitted_at)+' · <a href="https://tronscan.org/#/transaction/'+esc(s.usdt_txid)+'" target="_blank" rel="noopener">تحقق في Tronscan</a>'+(s.status==='quoted'?' <button class="syc-btn" data-uok>تأكيد استلام USDT</button>':'')+'</div>':'')+
       '<div class="tm-g4"><div><label class="ac-l">الحالة</label><select class="ac-i" data-k="status">'+Object.keys(SST).map(function(k){return '<option value="'+k+'"'+(k===s.status?' selected':'')+'>'+SST[k]+'</option>'}).join('')+'</select></div>'+
       inp('weight_kg','الوزن النهائي كجم',s.weight_kg,'number')+inp('price_rm','السعر RM',s.price_rm,'number')+inp('payment_link','رابط دفع (اختياري)',s.payment_link)+
       inp('carrier','شركة الشحن',s.carrier)+inp('tracking_no','رقم التتبع',s.tracking_no)+inp('tracking_url','رابط التتبع',s.tracking_url)+
@@ -147,6 +148,8 @@
         weight_kg:val('weight_kg')===''?null:+val('weight_kg'),price_rm:val('price_rm')===''?null:+val('price_rm')};
         if(up.price_rm&&up.status==='requested'){up.status='quoted';$('[data-k="status"]',card).value='quoted'}
         var r=await sb.from('shipments').update(up).eq('id',id);$('[data-smsg]',card).textContent=r.error?r.error.message:'تم الحفظ ✓';if(!r.error)setTimeout(done,700)};
+      var uok=$('[data-uok]',card);if(uok)uok.onclick=async function(){if(!confirm('تأكدت في Tronscan إن المبلغ وصل لمحفظتنا؟'))return;uok.disabled=true;
+        var r=await sb.from('shipments').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',id).eq('status','quoted');$('[data-smsg]',card).textContent=r.error?r.error.message:'تم تأكيد الدفع ✓';if(!r.error)setTimeout(done,700);else uok.disabled=false};
       $('[data-swa]',card).onclick=function(){var st=val('status'),n=card.getAttribute('data-name'),acc=location.origin+'/ar/account/',t;
         if(st==='quoted')t='هلا '+n+'\nشحنتك #'+id+' جاهزة للشحن\nالوزن: '+val('weight_kg')+' كجم\nالسعر: RM '+val('price_rm')+(val('payment_link')?'\nرابط الدفع: '+val('payment_link'):'')+'\nأو ادفع من حسابك: '+acc;
         else if(st==='paid')t='هلا '+n+'\nاستلمنا الدفع لشحنتك #'+id+' بنشحنها قريب ونرسل لك رقم التتبع.';
