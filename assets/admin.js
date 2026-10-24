@@ -31,12 +31,38 @@
   }
   var view='ships';
   function shell(){
-    root.innerHTML='<div class="tm-tabs"><button data-v="ships">الشحنات</button><button data-v="cust">العملاء</button><button data-v="add">استلام طرد</button></div><div id="tmBody"></div>';
+    root.innerHTML='<div class="tm-tabs"><button data-v="ships">الشحنات</button><button data-v="cust">العملاء</button><button data-v="add">استلام طرد</button><button data-v="rates">الأسعار</button></div><div id="tmBody"></div>';
     root.querySelectorAll('[data-v]').forEach(function(b){b.onclick=function(){view=b.getAttribute('data-v');go()}});go();
   }
-  function go(){root.querySelectorAll('[data-v]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===view)});({ships:ships,cust:custList,add:addByCode})[view]()}
+  function go(){root.querySelectorAll('[data-v]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===view)});({ships:ships,cust:custList,add:addByCode,rates:rates})[view]()}
   var body=function(){return $('#tmBody')};
 
+
+  /* ---------- rates ---------- */
+  async function rates(){
+    body().innerHTML='<div class="ac-loading"></div>';
+    var cs=(await sb.from('carriers').select('*').order('sort')).data||[];
+    var st=(await sb.from('settings').select('*')).data||[],sv=function(k){var x=st.find(function(r){return r.key===k});return x?x.value:''};
+    var cnt={};for(var i=0;i<cs.length;i++){var r=await sb.from('carrier_rates').select('carrier',{count:'exact',head:true}).eq('carrier',cs[i].id);var z=await sb.from('carrier_zones').select('carrier',{count:'exact',head:true}).eq('carrier',cs[i].id);cnt[cs[i].id]=[z.count||0,r.count||0]}
+    var f=function(k,l,v,t){return '<div><label class="ac-l">'+l+'</label><input class="ac-i" data-k="'+k+'" value="'+esc(v==null?'':v)+'"'+(t?' type="number" step="0.01"':'')+(t?' dir="ltr"':'')+'></div>'};
+    var h='<div class="ac-card"><h3 class="ac-h">تجربة السعر</h3><div class="tm-g4"><div><label class="ac-l">رمز الدولة</label><input class="ac-i" id="tqC" value="SA" dir="ltr" maxlength="2"></div><div><label class="ac-l">الوزن كجم</label><input class="ac-i" id="tqK" value="1" type="number" step="0.1" dir="ltr"></div></div><div class="ac-btns"><button class="syc-btn" id="tqGo">احسب</button></div><div id="tqOut"></div></div>';
+    h+='<div class="ac-card"><h3 class="ac-h">خصم أول شحنة</h3><div class="tm-g4">'+f('first_discount_pct','النسبة %',sv('first_discount_pct'),1)+f('first_discount_max','الحد الأعلى RM',sv('first_discount_max'),1)+'</div><div class="ac-btns"><button class="syc-btn" id="dsSave">حفظ</button><span class="ac-ok" id="dsMsg"></span></div></div>';
+    h+=cs.map(function(c){return '<div class="ac-card tm-car" data-cid="'+esc(c.id)+'"><h3 class="ac-h">'+esc(c.name)+' <span class="ac-muted" dir="ltr">('+esc(c.id)+')</span> <span class="ac-pill s-'+(c.active?'paid':'cancelled')+'">'+(c.active?'مفعّل':'موقوف')+'</span></h3>'+
+      '<p class="ac-muted">الدول: '+cnt[c.id][0]+' · أسطر الأسعار: '+cnt[c.id][1]+(cnt[c.id][1]?'':' — ما فيه أسعار للحين، أرسل كرت الأسعار لـ Claude')+'</p>'+
+      '<label class="tm-chk"><input type="checkbox" data-k="active"'+(c.active?' checked':'')+'> مفعّل ويظهر للعملاء</label>'+
+      '<div class="tm-g4">'+f('name','الاسم (إنجليزي)',c.name)+f('name_ar','الاسم (عربي)',c.name_ar)+f('transit_ar','مدة التوصيل (عربي)',c.transit_ar)+f('transit_en','مدة التوصيل (إنجليزي)',c.transit_en)+
+      f('fuel_pct','رسوم الوقود %',c.fuel_pct,1)+f('markup_pct','نسبة الربح %',c.markup_pct,1)+f('vol_divisor','قاسم الوزن الحجمي',c.vol_divisor,1)+f('max_kg','أقصى وزن كجم',c.max_kg,1)+'</div>'+
+      '<div class="ac-btns"><button class="syc-btn" data-csave>حفظ</button><span class="ac-ok" data-cmsg></span></div></div>'}).join('');
+    body().innerHTML=h;
+    $('#tqGo').onclick=async function(){var r=await sb.rpc('quote',{p_cc:$('#tqC').value.trim().toUpperCase(),p_kg:+$('#tqK').value});
+      $('#tqOut').innerHTML=r.error?'<p class="ac-msg bad">'+esc(r.error.message)+'</p>':((r.data||[]).length?'<div class="tm-list">'+r.data.map(function(q){return '<div class="ac-sh2"><b>'+esc(q.name)+'</b> — RM '+q.price_rm+'</div>'}).join('')+'</div>':'<p class="ac-muted">ما فيه سعر لهذي الدولة أو الوزن.</p>')};
+    $('#dsSave').onclick=async function(){var e=null;for(var k of ['first_discount_pct','first_discount_max']){var v=+$('[data-k="'+k+'"]',$('#dsSave').closest('.ac-card')).value;var r=await sb.from('settings').upsert({key:k,value:v});if(r.error)e=r.error}$('#dsMsg').textContent=e?e.message:'تم الحفظ ✓'};
+    body().querySelectorAll('.tm-car').forEach(function(card){$('[data-csave]',card).onclick=async function(){
+      var g=function(k){var x=$('[data-k="'+k+'"]',card);return x.type==='checkbox'?x.checked:x.value.trim()};
+      var up={active:g('active'),name:g('name')||card.getAttribute('data-cid'),name_ar:g('name_ar')||null,transit_ar:g('transit_ar')||null,transit_en:g('transit_en')||null,
+        fuel_pct:+g('fuel_pct')||0,markup_pct:+g('markup_pct')||0,vol_divisor:+g('vol_divisor')||5000,max_kg:+g('max_kg')||70};
+      var r=await sb.from('carriers').update(up).eq('id',card.getAttribute('data-cid'));$('[data-cmsg]',card).textContent=r.error?r.error.message:'تم الحفظ ✓';if(!r.error)setTimeout(rates,700)}});
+  }
   /* ---------- customers ---------- */
   async function custList(q){
     body().innerHTML='<div class="ac-card"><input class="ac-i" id="cq" placeholder="ابحث بالكود أو الاسم أو الجوال أو الإيميل" value="'+esc(q||'')+'"><div id="cl" class="tm-list"><div class="ac-loading"></div></div></div>';
@@ -135,6 +161,7 @@
       '<div class="ac-sh2">📍 '+esc([s.ship_name,s.ship_phone,s.ship_address,s.ship_city,s.ship_country].filter(Boolean).join(' · '))+'</div>'+
       '<div class="ac-sh2">📦 '+mine.map(function(p){return '#'+p.id+' ('+(p.weight_kg||'?')+' كجم)'}).join('، ')+' — المجموع '+kg.toFixed(2)+' كجم'+(vol?' · حجمي '+vol.toFixed(2):'')+'</div>'+
       (s.customer_note?'<div class="ac-sh2">💬 '+esc(s.customer_note)+'</div>':'')+
+      (s.auto_quoted?'<div class="ac-sh2">⚡ مسعّرة تلقائياً'+(s.carrier?' · '+esc(s.carrier):'')+(s.price_list_rm?' · السعر '+s.price_list_rm+(s.discount_rm?' − خصم أول شحنة '+s.discount_rm:'')+' = RM '+s.price_rm:'')+'</div>':'')+
       (s.usdt_txid?'<div class="tm-usdt"><b>دفع USDT</b> <span dir="ltr">'+(s.usdt_amount||'?')+' USDT</span> · '+fmtD(s.usdt_submitted_at)+' · <a href="https://tronscan.org/#/transaction/'+esc(s.usdt_txid)+'" target="_blank" rel="noopener">تحقق في Tronscan</a>'+(s.status==='quoted'?' <button class="syc-btn" data-uok>تأكيد استلام USDT</button>':'')+'</div>':'')+
       '<div class="tm-g4"><div><label class="ac-l">الحالة</label><select class="ac-i" data-k="status">'+Object.keys(SST).map(function(k){return '<option value="'+k+'"'+(k===s.status?' selected':'')+'>'+SST[k]+'</option>'}).join('')+'</select></div>'+
       inp('weight_kg','الوزن النهائي كجم',s.weight_kg,'number')+inp('price_rm','السعر RM',s.price_rm,'number')+inp('payment_link','رابط دفع (اختياري)',s.payment_link)+

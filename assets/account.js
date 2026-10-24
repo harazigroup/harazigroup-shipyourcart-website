@@ -4,8 +4,6 @@
   var C=window.SYC||{},L=C.lang||'en',P=C.prefix||'';
   var ADDR={l1:'No.37, Jalan Cempaka 3A',l2:'Kawasan Perindustrian Anugerah Suria',pc:'48000',city:'Rawang',state:'Selangor',country:'Malaysia',phone:'+60 10-707 0190'};
   var WA='60107070190';
-  var RATES=[0,220,290,335,390,450,500,560,610,670,720,780,830,890,940,1000,1050,1110,1170,1220,1290];
-  var GCC=['saudi','ksa','السعودية','uae','emirates','الإمارات','الامارات','oman','عمان','عُمان','kuwait','الكويت','qatar','قطر','bahrain','البحرين'];
   var T={
   en:{signin:'Sign in',first:'First name',last:'Last name',phone:'Phone number (WhatsApp)',err_req2:'Please fill in first and last name, country and phone number.',signup:'Create account',email:'Email',pw:'Password',pw2:'Repeat password',name:'Full name',wa:'WhatsApp number',country:'Country',
    forgot:'Forgot password?',send_reset:'Send reset link',back:'Back to sign in',have:'Already have an account?',noacc:'New here?',
@@ -17,7 +15,7 @@
    st:{received:'In warehouse',in_shipment:'Shipment requested',shipped:'Shipped',on_hold:'On hold',returned:'Returned'},
    req:'Request shipment',req_h:'Ship selected parcels',req_sel:'parcel(s) selected',est:'Estimated air freight to the GCC',est_q:'We will send you a quote',
    method:'Method',m:{air:'Air',sea:'Sea',land:'Land',express:'Express'},rname:'Recipient name',rphone:'Recipient phone',raddr:'Address',rcity:'City',rcountry:'Country',note:'Note (optional)',
-   submit:'Send request',cancel:'Cancel',req_ok:'Request sent. We will confirm the final price on WhatsApp.',
+   choose:'Choose your shipping',first_off:'First shipment discount',pay_ready:'Your price is ready. Pay below and we ship.',no_rate:'We will weigh your parcels and send you the price.',ld:'Loading prices…',submit:'Send request',cancel:'Cancel',req_ok:'Request sent. We will confirm the final price on WhatsApp.',
    ships:'My shipments',noships:'No shipments yet.',sh:'Shipment',ss:{requested:'Requested',quoted:'Price ready',paid:'Paid',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'},
    price:'Price',pay:'Pay now',pay_usdt:'Pay with USDT',u_title:'Pay with USDT (TRC20)',u_amt:'Amount to send',u_net:'Network',u_addr:'Our USDT address',u_warn:'Send USDT on the TRC20 (Tron) network only, and the exact amount. Other coins or networks cannot be recovered.',u_fee:'Network fees are paid by the sender.',u_rate:'Rate',u_tx:'Transaction ID (TxID)',u_send:'I have paid, submit',u_copy:'Copy',u_copied:'Copied',u_ok:'Thank you! We are checking your payment and will confirm it shortly by email.',u_pending:'USDT payment under review',u_wa:'Send us the TxID on WhatsApp',u_bad:'Please paste a valid TxID (64 characters).',u_used:'This TxID was already used.',u_norate:'Could not load the exchange rate. Please try again or contact us on WhatsApp.',tracking:'Tracking',cancel_req:'Cancel request',profile:'My details',saved:'Saved ✓',
    check_mail:'Almost done: we sent a confirmation link to ',check_mail2:'. Open it, then sign in.',reset_sent:'If an account exists, we sent a link to set a new password.',
@@ -35,7 +33,7 @@
    st:{received:'في المستودع',in_shipment:'طلبت شحنه',shipped:'تم الشحن',on_hold:'معلّق',returned:'مرتجع'},
    req:'اطلب الشحن',req_h:'شحن الطرود المختارة',req_sel:'طرد مختار',est:'تقدير الشحن الجوي للخليج',est_q:'بنرسل لك عرض سعر',
    method:'طريقة الشحن',m:{air:'جوي',sea:'بحري',land:'بري',express:'سريع'},rname:'اسم المستلم',rphone:'جوال المستلم',raddr:'العنوان',rcity:'المدينة',rcountry:'الدولة',note:'ملاحظة (اختياري)',
-   submit:'أرسل الطلب',cancel:'إلغاء',req_ok:'تم إرسال طلبك. بنأكد لك السعر النهائي على الواتساب.',
+   choose:'اختار طريقة الشحن',first_off:'خصم أول شحنة',pay_ready:'سعرك جاهز. ادفع تحت ونشحن لك على طول.',no_rate:'بنوزن طرودك ونرسل لك السعر.',ld:'جاري تحميل الأسعار…',submit:'أرسل الطلب',cancel:'إلغاء',req_ok:'تم إرسال طلبك. بنأكد لك السعر النهائي على الواتساب.',
    ships:'شحناتي',noships:'ما فيه شحنات للحين.',sh:'شحنة',ss:{requested:'تم الطلب',quoted:'السعر جاهز',paid:'تم الدفع',shipped:'تم الشحن',delivered:'تم التسليم',cancelled:'ملغاة'},
    price:'السعر',pay:'ادفع الحين',pay_usdt:'ادفع USDT',u_title:'الدفع بـ USDT (شبكة TRC20)',u_amt:'المبلغ المطلوب',u_net:'الشبكة',u_addr:'عنوان محفظتنا',u_warn:'أرسل USDT على شبكة TRC20 (Tron) فقط، وبنفس المبلغ بالضبط. أي عملة أو شبكة ثانية ما نقدر نسترجعها.',u_fee:'رسوم الشبكة على المرسل.',u_rate:'سعر الصرف',u_tx:'رقم العملية (TxID)',u_send:'دفعت، أرسل رقم العملية',u_copy:'نسخ',u_copied:'تم النسخ',u_ok:'شكراً لك! نراجع الدفعة ونأكدها لك قريب على الإيميل.',u_pending:'دفعة USDT قيد المراجعة',u_wa:'أرسل لنا رقم العملية على الواتساب',u_bad:'الصق رقم عملية صحيح (64 حرف).',u_used:'رقم العملية هذا مستخدم من قبل.',u_norate:'ما قدرنا نجيب سعر الصرف. جرّب مرة ثانية أو تواصل معنا على الواتساب.',tracking:'التتبع',cancel_req:'إلغاء الطلب',profile:'بياناتي',saved:'تم الحفظ ✓',
    check_mail:'بقيت خطوة: أرسلنا رابط تأكيد إلى ',check_mail2:'. افتحه ثم سجّل الدخول.',reset_sent:'إذا كان عندك حساب، أرسلنا لك رابط لتعيين كلمة مرور جديدة.',
@@ -53,7 +51,7 @@
    st:{received:'Di gudang',in_shipment:'Penghantaran diminta',shipped:'Dihantar',on_hold:'Ditahan',returned:'Dipulangkan'},
    req:'Minta penghantaran',req_h:'Hantar bungkusan terpilih',req_sel:'bungkusan dipilih',est:'Anggaran kargo udara ke GCC',est_q:'Kami akan hantar sebut harga',
    method:'Kaedah',m:{air:'Udara',sea:'Laut',land:'Darat',express:'Ekspres'},rname:'Nama penerima',rphone:'Telefon penerima',raddr:'Alamat',rcity:'Bandar',rcountry:'Negara',note:'Nota (pilihan)',
-   submit:'Hantar permintaan',cancel:'Batal',req_ok:'Permintaan dihantar. Kami akan sahkan harga akhir melalui WhatsApp.',
+   choose:'Pilih penghantaran',first_off:'Diskaun penghantaran pertama',pay_ready:'Harga anda sedia. Bayar di bawah dan kami terus hantar.',no_rate:'Kami akan timbang bungkusan anda dan hantar harga.',ld:'Memuatkan harga…',submit:'Hantar permintaan',cancel:'Batal',req_ok:'Permintaan dihantar. Kami akan sahkan harga akhir melalui WhatsApp.',
    ships:'Penghantaran saya',noships:'Belum ada penghantaran.',sh:'Penghantaran',ss:{requested:'Diminta',quoted:'Harga sedia',paid:'Dibayar',shipped:'Dihantar',delivered:'Diterima',cancelled:'Dibatalkan'},
    price:'Harga',pay:'Bayar sekarang',pay_usdt:'Bayar dengan USDT',u_title:'Bayar dengan USDT (TRC20)',u_amt:'Jumlah untuk dihantar',u_net:'Rangkaian',u_addr:'Alamat USDT kami',u_warn:'Hantar USDT pada rangkaian TRC20 (Tron) sahaja, dengan jumlah tepat. Syiling atau rangkaian lain tidak dapat dipulihkan.',u_fee:'Yuran rangkaian dibayar oleh penghantar.',u_rate:'Kadar',u_tx:'ID transaksi (TxID)',u_send:'Saya sudah bayar, hantar',u_copy:'Salin',u_copied:'Disalin',u_ok:'Terima kasih! Kami sedang menyemak bayaran anda dan akan mengesahkannya melalui e-mel.',u_pending:'Bayaran USDT sedang disemak',u_wa:'Hantar TxID kepada kami di WhatsApp',u_bad:'Sila tampal TxID yang sah (64 aksara).',u_used:'TxID ini sudah digunakan.',u_norate:'Kadar pertukaran tidak dapat dimuatkan. Cuba lagi atau hubungi kami di WhatsApp.',tracking:'Penjejakan',cancel_req:'Batal permintaan',profile:'Butiran saya',saved:'Disimpan ✓',
    check_mail:'Hampir siap: kami hantar pautan pengesahan ke ',check_mail2:'. Buka pautan itu, kemudian log masuk.',reset_sent:'Jika akaun wujud, kami telah hantar pautan untuk kata laluan baharu.',
@@ -231,9 +229,9 @@
     h+='<div class="ac-card"><h3 class="ac-h">'+T.ships+'</h3>';
     if(!ships.length)h+='<p class="ac-empty">'+T.noships+'</p>';
     else h+=ships.map(function(s){var cnt=parcels.filter(function(p){return p.shipment_id===s.id}).length;
-      return '<div class="ac-ship"><div class="ac-sh1"><b>'+T.sh+' #'+s.id+'</b> · '+fmtD(s.created_at)+' · '+(T.m[s.method]||s.method)+(cnt?' · '+cnt+' 📦':'')+'<span class="ac-pill s-'+s.status+'">'+(T.ss[s.status]||s.status)+'</span></div>'+
+      return '<div class="ac-ship"><div class="ac-sh1"><b>'+T.sh+' #'+s.id+'</b> · '+fmtD(s.created_at)+' · '+esc(s.rate_carrier==='syc_air'?T.m.air:(s.carrier||T.m[s.method]||s.method))+(cnt?' · '+cnt+' 📦':'')+'<span class="ac-pill s-'+s.status+'">'+(T.ss[s.status]||s.status)+'</span></div>'+
         '<div class="ac-sh2">'+esc([s.ship_name,s.ship_city,s.ship_country].filter(Boolean).join(', '))+(s.weight_kg?' · '+s.weight_kg+' kg':'')+'</div>'+
-        (s.price_rm?'<div class="ac-sh3">'+T.price+': <b>'+rm(s.price_rm)+'</b>'+(s.status==='quoted'?(s.usdt_txid?' <span class="ac-pill s-requested">'+T.u_pending+'</span>':(C.stripePk?' <button class="syc-btn ac-pay" data-pay="'+s.id+'">'+T.pay+'</button>':(s.payment_link?' <a class="syc-btn ac-pay" href="'+esc(s.payment_link)+'" target="_blank" rel="noopener">'+T.pay+'</a>':''))+' <button class="ac-usdt" data-usdt="'+s.id+'" data-rm="'+s.price_rm+'">'+T.pay_usdt+'</button>'):'')+'</div>':'')+
+        (s.price_rm?'<div class="ac-sh3">'+T.price+': '+(s.discount_rm?'<s>'+rm(s.price_list_rm)+'</s> ':'')+'<b>'+rm(s.price_rm)+'</b>'+(s.discount_rm?' <span class="ac-off">'+T.first_off+'</span>':'')+(s.status==='quoted'?(s.usdt_txid?' <span class="ac-pill s-requested">'+T.u_pending+'</span>':(C.stripePk?' <button class="syc-btn ac-pay" data-pay="'+s.id+'">'+T.pay+'</button>':(s.payment_link?' <a class="syc-btn ac-pay" href="'+esc(s.payment_link)+'" target="_blank" rel="noopener">'+T.pay+'</a>':''))+' <button class="ac-usdt" data-usdt="'+s.id+'" data-rm="'+s.price_rm+'">'+T.pay_usdt+'</button>'):'')+'</div>':'')+
         (s.tracking_no?'<div class="ac-sh3">'+T.tracking+': '+(s.tracking_url?'<a href="'+esc(s.tracking_url)+'" target="_blank" rel="noopener" dir="ltr">'+esc((s.carrier?s.carrier+' ':'')+s.tracking_no)+'</a>':'<span dir="ltr">'+esc((s.carrier?s.carrier+' ':'')+s.tracking_no)+'</span>')+'</div>':'')+
         (s.status==='requested'?'<button class="ac-link" data-cancel="'+s.id+'">'+T.cancel_req+'</button>':'')+'</div>'}).join('');
     h+='</div>';
@@ -255,31 +253,47 @@
     rootA.querySelectorAll('[data-cancel]').forEach(function(b){b.onclick=async function(){b.disabled=true;var r=await sb.rpc('cancel_shipment',{p_id:+b.getAttribute('data-cancel')});if(r.error)alert(friendly(r.error.message));load()}});
     $('#acProf').onsubmit=async function(e){e.preventDefault();var r=await sb.from('customers').update({full_name:$('#pfName').value.trim().replace(/\s+/g,' '),whatsapp:$('#pfWa').value.trim(),country:$('#pfCountry').value?cname($('#pfCountry').value,'en'):me.country}).eq('id',me.id);$('#pfMsg').textContent=r.error?friendly(r.error.message):T.saved;if(!r.error){me.full_name=$('#pfName').value.trim()}};
   }
-  function estimate(ids,country){
-    var kg=0,miss=false;ids.forEach(function(id){var p=parcels.find(function(x){return String(x.id)===String(id)});if(p&&p.weight_kg){var vol=(p.length_cm&&p.width_cm&&p.height_cm)?p.length_cm*p.width_cm*p.height_cm/5000:0;kg+=Math.max(+p.weight_kg,vol)}else miss=true});
-    var gcc=GCC.some(function(g){return String(country||'').toLowerCase().indexOf(g)>-1});
-    var c=Math.ceil(kg);if(miss||!gcc||c<1||c>20)return '<p class="ac-est">'+T.est_q+'</p>';
-    return '<p class="ac-est">'+T.est+' ('+c+' kg): <b>'+rm(RATES[c])+'</b></p>';
-  }
+  function chargeKg(ids){
+    var kg=0,miss=false;ids.forEach(function(id){var p=parcels.find(function(x){return String(x.id)===String(id)});if(p&&p.weight_kg!=null){var vol=(p.length_cm&&p.width_cm&&p.height_cm)?p.length_cm*p.width_cm*p.height_cm/5000:0;kg+=Math.max(+p.weight_kg,vol)}else miss=true});
+    return miss?null:Math.round(kg*100)/100}
   function reqForm(){
     var ids=Object.keys(sel).filter(function(k){return sel[k]});
-    var box=$('#acReqForm');
+    var box=$('#acReqForm'),kg=chargeKg(ids),first=!ships.some(function(x){return x.status!=='cancelled'}),disc=null,car='';
+    var cc0=codeFromName(me.ship_country)||codeFromName(me.country)||'';
     box.innerHTML='<form class="ac-form ac-req"><h4 class="ac-h">'+T.req_h+' ('+ids.length+')</h4>'+
-      '<label class="ac-l">'+T.method+'</label><select class="ac-i" id="rqM">'+['air','sea','land','express'].map(function(m){return '<option value="'+m+'">'+T.m[m]+'</option>'}).join('')+'</select>'+
-      field('rqName',T.rname,'text',me.ship_name||me.full_name,1)+field('rqPhone',T.rphone,'tel',me.ship_phone||me.whatsapp,1)+field('rqAddr',T.raddr,'text',me.ship_address,1)+field('rqCity',T.rcity,'text',me.ship_city,1)+field('rqCountry',T.rcountry,'text',me.ship_country||me.country,1)+
-      '<label class="ac-l" for="rqNote">'+T.note+'</label><textarea class="ac-i" id="rqNote" rows="2"></textarea><div id="rqEst"></div><p id="rqMsg"></p>'+
+      field('rqName',T.rname,'text',me.ship_name||me.full_name,1)+field('rqPhone',T.rphone,'tel',me.ship_phone||me.whatsapp,1)+field('rqAddr',T.raddr,'text',me.ship_address,1)+field('rqCity',T.rcity,'text',me.ship_city,1)+countrySelect('rqCC',T.rcountry,cc0)+
+      '<div id="rqCar" class="rq-car"></div>'+
+      '<label class="ac-l" for="rqNote">'+T.note+'</label><textarea class="ac-i" id="rqNote" rows="2"></textarea><p id="rqMsg"></p>'+
       '<div class="ac-btns"><button class="syc-btn" type="submit">'+T.submit+'</button><button type="button" class="ac-link" id="rqX">'+T.cancel+'</button></div></form>';
-    var upd=function(){$('#rqEst').innerHTML=estimate(ids,$('#rqCountry').value)};upd();$('#rqCountry').oninput=upd;
+    var cbox=$('#rqCar');
+    async function loadCars(){
+      car='';var cc=$('#rqCC').value;
+      if(kg==null||!cc){cbox.innerHTML=cc?'<p class="ac-est">'+T.no_rate+'</p>':'';return}
+      cbox.innerHTML='<p class="ac-muted">'+T.ld+'</p>';
+      var r=await sb.rpc('quote',{p_cc:cc,p_kg:kg}),q=(r.data||[]);
+      if(first&&disc===null){var d=await sb.rpc('first_discount_info');disc=(d.data&&d.data[0])||{pct:0,max_rm:0}}
+      if(r.error||!q.length){cbox.innerHTML='<p class="ac-est">'+T.no_rate+'</p>';return}
+      car=q[0].carrier;
+      cbox.innerHTML='<p class="ac-l">'+T.choose+' <span class="ac-muted" dir="ltr">('+kg+' kg)</span></p>'+q.map(function(o,i){
+        var off=first&&disc?Math.min(Math.round(o.price_rm*disc.pct)/100,+disc.max_rm):0,tr=o['transit_'+L]||o.transit_en||'';
+        return '<label class="rq-opt"><input type="radio" name="rqCar" value="'+esc(o.carrier)+'"'+(i===0?' checked':'')+'><span class="rq-n"><b>'+esc(o['name_'+L]||o.name)+'</b>'+(tr?'<small>'+esc(tr)+'</small>':'')+'</span>'+
+          '<span class="rq-p" dir="ltr">'+(off>0?'<s>'+rm(o.price_rm)+'</s> ':'')+'<b>'+rm(o.price_rm-off)+'</b></span></label>'}).join('')+
+        (first&&disc&&+disc.pct>0?'<p class="cl-disc">'+T.first_off+': −'+(+disc.pct)+'%</p>':'');
+      cbox.querySelectorAll('input[name=rqCar]').forEach(function(x){x.onchange=function(){car=x.value}});
+    }
+    $('#rqCC').onchange=loadCars;loadCars();
     $('#rqX').onclick=function(){box.innerHTML=''};
     box.scrollIntoView({behavior:'smooth',block:'start'});
     $('form',box).onsubmit=async function(e){e.preventDefault();
       var g=function(id){return $('#'+id).value.trim()};
-      if(!g('rqName')||!g('rqPhone')||!g('rqAddr')||!g('rqCity')||!g('rqCountry')){$('#rqMsg').className='ac-msg bad';$('#rqMsg').textContent=T.err_req;return}
+      if(!g('rqName')||!g('rqPhone')||!g('rqAddr')||!g('rqCity')||!g('rqCC')){$('#rqMsg').className='ac-msg bad';$('#rqMsg').textContent=T.err_req;return}
       var b=$('button[type=submit]',box);b.disabled=true;
-      var r=await sb.rpc('request_shipment',{p_parcels:ids.map(Number),p_method:g('rqM'),p_name:g('rqName'),p_phone:g('rqPhone'),p_address:g('rqAddr'),p_city:g('rqCity'),p_country:g('rqCountry'),p_note:g('rqNote')});
+      var r=await sb.rpc('request_shipment_v2',{p_parcels:ids.map(Number),p_carrier:car,p_name:g('rqName'),p_phone:g('rqPhone'),p_address:g('rqAddr'),p_city:g('rqCity'),p_country:cname(g('rqCC'),'en'),p_cc:g('rqCC'),p_note:g('rqNote')});
+      if(r.error&&/request_shipment_v2|PGRST202|schema cache/i.test((r.error.message||'')+(r.error.code||''))){car='';r=await sb.rpc('request_shipment',{p_parcels:ids.map(Number),p_method:'air',p_name:g('rqName'),p_phone:g('rqPhone'),p_address:g('rqAddr'),p_city:g('rqCity'),p_country:cname(g('rqCC'),'en'),p_note:g('rqNote')})}
       if(r.error){b.disabled=false;$('#rqMsg').className='ac-msg bad';$('#rqMsg').textContent=friendly(r.error.message);return}
-      sel={};await load();var m=document.createElement('p');m.className='ac-msg good';m.textContent=T.req_ok;rootA.insertBefore(m,rootA.firstChild);
-      window.open(waLink(T.wa_msg+me.code+' - '+T.sh+' #'+r.data),'_blank');
+      sel={};await load();var m=document.createElement('p');m.className='ac-msg good';m.textContent=car?T.pay_ready:T.req_ok;rootA.insertBefore(m,rootA.firstChild);
+      if(!car)window.open(waLink(T.wa_msg+me.code+' - '+T.sh+' #'+r.data),'_blank');
+      else{var pb=rootA.querySelector('[data-pay="'+r.data+'"]');if(pb)pb.scrollIntoView({behavior:'smooth',block:'center'})}
     };
   }
 

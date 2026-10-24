@@ -125,9 +125,9 @@ async function onShipment(id: number) {
       ms: [`Permintaan penghantaran #${s.id} diterima`, "Permintaan diterima", `${T.ms.hi} ${esc(c.full_name)}, kami sedang membungkus bungkusan anda dan akan menghantar berat serta harga akhir.`],
     },
     quoted: {
-      en: [`Shipment #${s.id} is ready: ${rm(s.price_rm)}`, "Your shipment is ready to go", `${T.en.hi} ${esc(c.full_name)}, your parcels are packed.` + box([["Weight", s.weight_kg + " kg"], ["Price", rm(s.price_rm)]]) + "Pay securely in your account and we ship right away.", "Pay now"],
-      ar: [`شحنتك #${s.id} جاهزة: ${rm(s.price_rm)}`, "شحنتك جاهزة للشحن", `${T.ar.hi} ${esc(c.full_name)}، جهّزنا طرودك.` + box([["الوزن", s.weight_kg + " كجم"], ["السعر", rm(s.price_rm)]]) + "ادفع بأمان من حسابك ونشحنها على طول.", "ادفع الحين"],
-      ms: [`Penghantaran #${s.id} sedia: ${rm(s.price_rm)}`, "Penghantaran anda sedia", `${T.ms.hi} ${esc(c.full_name)}, bungkusan anda telah dibungkus.` + box([["Berat", s.weight_kg + " kg"], ["Harga", rm(s.price_rm)]]) + "Bayar dengan selamat dalam akaun anda dan kami terus hantar.", "Bayar sekarang"],
+      en: [`Shipment #${s.id} is ready: ${rm(s.price_rm)}`, "Your shipment is ready to go", `${T.en.hi} ${esc(c.full_name)}, ${s.auto_quoted ? "here is the price for your shipment." : "your parcels are packed."}` + box([...(s.carrier ? [["Carrier", esc(s.carrier)] as [string, string]] : []), ["Weight", s.weight_kg + " kg"], ...(s.discount_rm ? [["First shipment discount", "−" + rm(s.discount_rm)] as [string, string]] : []), ["Price", rm(s.price_rm)]]) + "Pay securely in your account and we ship right away.", "Pay now"],
+      ar: [`شحنتك #${s.id} جاهزة: ${rm(s.price_rm)}`, "شحنتك جاهزة للشحن", `${T.ar.hi} ${esc(c.full_name)}، ${s.auto_quoted ? "هذا سعر شحنتك." : "جهّزنا طرودك."}` + box([...(s.carrier ? [["الشحن", esc(s.carrier)] as [string, string]] : []), ["الوزن", s.weight_kg + " كجم"], ...(s.discount_rm ? [["خصم أول شحنة", "−" + rm(s.discount_rm)] as [string, string]] : []), ["السعر", rm(s.price_rm)]]) + "ادفع بأمان من حسابك ونشحنها على طول.", "ادفع الحين"],
+      ms: [`Penghantaran #${s.id} sedia: ${rm(s.price_rm)}`, "Penghantaran anda sedia", `${T.ms.hi} ${esc(c.full_name)}, ${s.auto_quoted ? "ini harga penghantaran anda." : "bungkusan anda telah dibungkus."}` + box([...(s.carrier ? [["Penghantar", esc(s.carrier)] as [string, string]] : []), ["Berat", s.weight_kg + " kg"], ...(s.discount_rm ? [["Diskaun penghantaran pertama", "−" + rm(s.discount_rm)] as [string, string]] : []), ["Harga", rm(s.price_rm)]]) + "Bayar dengan selamat dalam akaun anda dan kami terus hantar.", "Bayar sekarang"],
     },
     paid: {
       en: [`Payment received for shipment #${s.id}`, "Thank you, payment received", `${T.en.hi} ${esc(c.full_name)}, we received ${rm(s.price_rm)} for shipment #${s.id}. We will send the tracking number once it ships.`],
@@ -147,11 +147,11 @@ async function onShipment(id: number) {
   };
   const m = msgs[s.status]?.[l];
   if (m) out.push(await send(key, c.email, m[0], layout(l, m[1], m[2], { text: m[3] || T[l].acc, url: accUrl(l) })));
-  if (s.status === "requested" || s.status === "paid") {
+  if (s.status === "requested" || s.status === "paid" || (s.status === "quoted" && s.auto_quoted)) {
     const { data: ps } = await sb.from("parcels").select("id,weight_kg").eq("shipment_id", s.id);
-    out.push(await send(`admin_${key}`, ADMIN, `${s.status === "paid" ? "دفعة وصلت" : "طلب شحن جديد"} #${s.id} — ${c.code}`,
+    out.push(await send(`admin_${key}`, ADMIN, `${s.status === "paid" ? "دفعة وصلت" : s.status === "quoted" ? "طلب شحن جديد (مسعّر)" : "طلب شحن جديد"} #${s.id} — ${c.code}`,
       layout("ar", `${s.status === "paid" ? "دفعة وصلت" : "طلب شحن جديد"}: شحنة #${s.id}`, box([
-        ["العميل", `${esc(c.code)} — ${esc(c.full_name)}`], ["الحالة", ST[s.status]], ["الطريقة", esc(s.method)],
+        ["العميل", `${esc(c.code)} — ${esc(c.full_name)}`], ["الحالة", ST[s.status]], ["الطريقة", esc(s.carrier || s.method)],
         ["المستلم", esc([s.ship_name, s.ship_phone, s.ship_address, s.ship_city, s.ship_country].filter(Boolean).join("، "))],
         ["الطرود", (ps || []).map((p) => `#${p.id} (${p.weight_kg ?? "?"} كجم)`).join("، ")],
         ...(s.price_rm ? [["المبلغ", rm(s.price_rm)] as [string, string]] : []),
