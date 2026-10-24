@@ -166,5 +166,47 @@
    "title": "Amazon FBA prep service in Malaysia: labeling, bundling, shipping | Ship Your Cart",
    "description": "Amazon FBA prep center in Malaysia: receiving, inspection, FNSKU labeling, poly bagging, bundling and shipping to any Amazon FBA warehouse worldwide."
   }
+ },
+ "prohibited-items": {
+  "en": {
+   "title": "Prohibited and restricted items | Ship Your Cart",
+   "description": "What we cannot ship from Malaysia, and items you should ask us about before you buy."
+  },
+  "ar": {
+   "title": "المواد الممنوعة والمقيّدة | Ship Your Cart",
+   "description": "الأشياء اللي ما نقدر نشحنها من ماليزيا، والأشياء اللي لازم تسألنا عنها قبل الشراء."
+  },
+  "ms": {
+   "title": "Barang larangan dan terhad | Ship Your Cart",
+   "description": "Barang yang kami tidak boleh hantar dari Malaysia, dan barang yang perlu ditanya dahulu sebelum membeli."
+  }
+ },
+ "shipping-policy": {
+  "en": {
+   "title": "Shipping policy | Ship Your Cart",
+   "description": "How weights, prices, customs, delivery times and claims work when you ship with Ship Your Cart."
+  },
+  "ar": {
+   "title": "سياسة الشحن | Ship Your Cart",
+   "description": "كيف نحسب الوزن والسعر، والجمارك، ومدة التوصيل، والمطالبات مع Ship Your Cart."
+  },
+  "ms": {
+   "title": "Polisi penghantaran | Ship Your Cart",
+   "description": "Cara berat, harga, kastam, tempoh penghantaran dan tuntutan berfungsi dengan Ship Your Cart."
+  }
+ },
+ "refund-policy": {
+  "en": {
+   "title": "Cancellation and refund policy | Ship Your Cart",
+   "description": "When you can cancel a shipment and how refunds work at Ship Your Cart."
+  },
+  "ar": {
+   "title": "سياسة الإلغاء والاسترجاع | Ship Your Cart",
+   "description": "متى تقدر تلغي الشحنة وكيف يتم استرجاع المبلغ في Ship Your Cart."
+  },
+  "ms": {
+   "title": "Polisi pembatalan dan bayaran balik | Ship Your Cart",
+   "description": "Bila anda boleh membatalkan penghantaran dan cara bayaran balik di Ship Your Cart."
+  }
  }
 }

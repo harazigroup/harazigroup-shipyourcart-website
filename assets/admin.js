@@ -160,6 +160,7 @@
       '<div class="ac-sh1"><b>شحنة #'+s.id+'</b> · '+fmtD(s.created_at)+' · '+(MT[s.method]||s.method)+' · '+(c.code?'<button class="ac-link" data-open="'+s.customer_id+'">'+esc(c.code)+' — '+esc(c.full_name)+'</button>':'')+'<span class="ac-pill s-'+s.status+'">'+SST[s.status]+'</span></div>'+
       '<div class="ac-sh2">📍 '+esc([s.ship_name,s.ship_phone,s.ship_address,s.ship_city,s.ship_country].filter(Boolean).join(' · '))+'</div>'+
       '<div class="ac-sh2">📦 '+mine.map(function(p){return '#'+p.id+' ('+(p.weight_kg||'?')+' كجم)'}).join('، ')+' — المجموع '+kg.toFixed(2)+' كجم'+(vol?' · حجمي '+vol.toFixed(2):'')+'</div>'+
+      (s.contents?'<div class="ac-sh2">🧾 '+esc(s.contents)+(s.declared_value_rm?' · القيمة المصرّح بها RM '+s.declared_value_rm:'')+'</div>':'')+
       (s.customer_note?'<div class="ac-sh2">💬 '+esc(s.customer_note)+'</div>':'')+
       (s.auto_quoted?'<div class="ac-sh2">⚡ مسعّرة تلقائياً'+(s.carrier?' · '+esc(s.carrier):'')+(s.price_list_rm?' · السعر '+s.price_list_rm+(s.discount_rm?' − خصم أول شحنة '+s.discount_rm:'')+' = RM '+s.price_rm:'')+'</div>':'')+
       (s.usdt_txid?'<div class="tm-usdt"><b>دفع USDT</b> <span dir="ltr">'+(s.usdt_amount||'?')+' USDT</span> · '+fmtD(s.usdt_submitted_at)+' · <a href="https://tronscan.org/#/transaction/'+esc(s.usdt_txid)+'" target="_blank" rel="noopener">تحقق في Tronscan</a>'+(s.status==='quoted'?' <button class="syc-btn" data-uok>تأكيد استلام USDT</button>':'')+'</div>':'')+

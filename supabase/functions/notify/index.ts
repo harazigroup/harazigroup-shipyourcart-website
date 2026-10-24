@@ -155,6 +155,8 @@ async function onShipment(id: number) {
         ["المستلم", esc([s.ship_name, s.ship_phone, s.ship_address, s.ship_city, s.ship_country].filter(Boolean).join("، "))],
         ["الطرود", (ps || []).map((p) => `#${p.id} (${p.weight_kg ?? "?"} كجم)`).join("، ")],
         ...(s.price_rm ? [["المبلغ", rm(s.price_rm)] as [string, string]] : []),
+        ...(s.contents ? [["المحتويات", esc(s.contents)] as [string, string]] : []),
+        ...(s.declared_value_rm ? [["القيمة المصرّح بها", rm(s.declared_value_rm)] as [string, string]] : []),
         ...(s.customer_note ? [["ملاحظة العميل", esc(s.customer_note)] as [string, string]] : []),
       ]), { text: "لوحة الإدارة", url: `${SITE}/admin/` })));
   }
