@@ -9,19 +9,19 @@
         to:'Country',name:'Recipient name',phone:'Recipient phone',addr:'Address',city:'City',ship:'Shipping',total:'Total',note:'Note (optional)',
         pay:'Continue to payment',signin:'Sign in or create a free account to order. Your cart is saved.',signup:'Create free account',login:'Sign in',
         noship:'No instant shipping price for this country yet. Choose "Send it to my Malaysian address", or message us.',err:'Something went wrong: ',load:'Loading…',weight:'Estimated weight',fill:'Please fill in the recipient details.',
-        loaded:'Could not load the shop. Please try again.'},
+        loaded:'Could not load the shop. Please try again.',all:'All',cats:{coffee:'Coffee',raw:'Cosmetic raw materials'},cmin:'Coffee: minimum {n} bags',cmore:'Add {n} more coffee bags'},
     ar:{add:'أضف',min:'أقل طلب: {n} قطع',more:'أضف {n} قطع عشان تطلب',items:'قطع',sub:'المنتجات',checkout:'إتمام الطلب',empty:'المنتجات قريباً. راسلنا واتساب للأسعار.',
         how:'كيف تبي طلبك؟',direct:'اشحنه لعنواني الحين',direct_d:'سعر واحد للمنتجات والشحن من الباب إلى الباب.',wh:'أرسله لعنواني في ماليزيا',wh_d:'ادفع قيمة المنتجات الحين، واشحنها بعدين مع طلباتك الثانية.',
         to:'الدولة',name:'اسم المستلم',phone:'جوال المستلم',addr:'العنوان',city:'المدينة',ship:'الشحن',total:'الإجمالي',note:'ملاحظة (اختياري)',
         pay:'كمّل للدفع',signin:'سجّل دخول أو افتح حساب مجاني عشان تطلب. سلتك محفوظة.',signup:'افتح حساب مجاني',login:'تسجيل الدخول',
         noship:'ما عندنا سعر شحن فوري لهذي الدولة للحين. اختار "أرسله لعنواني في ماليزيا" أو راسلنا.',err:'صار خطأ: ',load:'جاري التحميل…',weight:'الوزن التقريبي',fill:'اكتب بيانات المستلم.',
-        loaded:'ما قدرنا نحمّل المتجر. جرّب مرة ثانية.'},
+        loaded:'ما قدرنا نحمّل المتجر. جرّب مرة ثانية.',all:'الكل',cats:{coffee:'القهوة',raw:'مواد خام للتجميل'},cmin:'القهوة: أقل طلب {n} أكياس',cmore:'أضف {n} أكياس قهوة كمان'},
     ms:{add:'Tambah',min:'Pesanan minimum: {n} item',more:'Tambah {n} lagi untuk memesan',items:'item',sub:'Produk',checkout:'Teruskan',empty:'Produk akan datang. Hubungi kami di WhatsApp untuk harga.',
         how:'Bagaimana anda mahu?',direct:'Hantar ke alamat saya sekarang',direct_d:'Satu harga untuk produk dan penghantaran pintu ke pintu.',wh:'Hantar ke alamat Malaysia saya',wh_d:'Bayar produk sekarang, hantar kemudian bersama pesanan lain.',
         to:'Negara',name:'Nama penerima',phone:'Telefon penerima',addr:'Alamat',city:'Bandar',ship:'Penghantaran',total:'Jumlah',note:'Nota (pilihan)',
         pay:'Teruskan ke pembayaran',signin:'Log masuk atau buka akaun percuma untuk memesan. Troli anda disimpan.',signup:'Buka akaun percuma',login:'Log masuk',
         noship:'Tiada harga penghantaran segera untuk negara ini lagi. Pilih "Hantar ke alamat Malaysia saya", atau hubungi kami.',err:'Ralat: ',load:'Memuatkan…',weight:'Anggaran berat',fill:'Sila isi butiran penerima.',
-        loaded:'Kedai tidak dapat dimuatkan. Cuba lagi.'}
+        loaded:'Kedai tidak dapat dimuatkan. Cuba lagi.',all:'Semua',cats:{coffee:'Kopi',raw:'Bahan mentah kosmetik'},cmin:'Kopi: minimum {n} beg',cmore:'Tambah {n} beg kopi lagi'}
   }[L];
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function rm(n){return 'RM '+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2})}
@@ -32,7 +32,9 @@
   function rpc(fn,a){return fetch(C.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:H,body:JSON.stringify(a||{})}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
   var sb=null;function client(){if(!sb&&window.supabase)sb=window.supabase.createClient(C.url,C.key,{auth:{persistSession:true,detectSessionInUrl:false}});return sb}
 
-  var products=[],info={min_items:6,pack_kg:0.3},cart={},mode='direct',car='',quotes=[],countries=[];
+  var products=[],info={min_items:6,pack_kg:0.3},cart={},mode='direct',car='',quotes=[],countries=[],cat='';
+  try{var m=/[?&]cat=([a-z_]+)/.exec(location.search);if(m)cat=m[1]}catch(e){}
+  function coffeeQty(){return products.reduce(function(a,p){return a+(p.category==='coffee'?(cart[p.id]||0):0)},0)}
   try{cart=JSON.parse(localStorage.getItem('syc_cart')||'{}')||{}}catch(e){cart={}}
   function save(){try{localStorage.setItem('syc_cart',JSON.stringify(cart))}catch(e){}}
   function count(){return Object.keys(cart).reduce(function(a,k){return a+(products.find(function(p){return String(p.id)===k})?cart[k]:0)},0)}
@@ -44,20 +46,26 @@
   Promise.all([rest('products?select=*&order=sort.asc,id.asc'),rpc('store_info').catch(function(){return []}),rpc('quote_countries').catch(function(){return []})]).then(function(r){
     products=r[0]||[];info=(r[1]||[])[0]||info;countries=(r[2]||[]).map(function(x){return typeof x==='string'?x:x.quote_countries});
     if(!products.length){root.innerHTML='<p class="ac-muted">'+T.empty+'</p><a class="ac-wa" href="https://wa.me/60107070190" target="_blank" rel="noopener">WhatsApp</a>';return}
+    var cs=cats();if(cat&&cs.indexOf(cat)<0)cat='';if(!cat&&cs.length>1)cat=cs[0];
     render();
   }).catch(function(){root.innerHTML='<p class="ac-msg bad">'+T.loaded+'</p>'});
 
+  function cats(){var a=[];products.forEach(function(p){var c=p.category||'other';if(a.indexOf(c)<0)a.push(c)});return a}
   function render(){
-    var h='<div class="sh-grid">'+products.map(function(p){var q=cart[p.id]||0;
+    var cs=cats(),tabs=cs.length>1?'<div class="cl-tabs sh-tabs" role="tablist">'+cs.map(function(c){return '<button type="button" role="tab" aria-selected="'+(c===cat)+'" class="'+(c===cat?'on':'')+'" data-cat="'+esc(c)+'">'+esc((T.cats||{})[c]||c)+'</button>'}).join('')+'</div>':'';
+    var list=cat?products.filter(function(p){return (p.category||'other')===cat}):products;
+    var h=tabs+'<div class="sh-grid">'+list.map(function(p){var q=cart[p.id]||0;
       return '<div class="sh-card"><div class="sh-img">'+(p.photo?'<img src="'+esc(p.photo)+'" alt="'+esc(nm(p))+'" loading="lazy">':'<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#b9b3cc" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg>')+'</div>'+
         '<div class="sh-b">'+(p.brand?'<div class="sh-brand">'+esc(p.brand)+'</div>':'')+'<h3 class="sh-n">'+esc(nm(p))+'</h3>'+((p['desc_'+L]||p.desc_en)?'<p class="sh-d">'+esc(p['desc_'+L]||p.desc_en)+'</p>':'')+
         '<div class="sh-row"><b class="sh-p" dir="ltr">'+rm(p.price_rm)+'</b>'+
         (q?'<div class="sh-q" dir="ltr"><button type="button" data-dec="'+p.id+'" aria-label="−">−</button><span>'+q+'</span><button type="button" data-inc="'+p.id+'" aria-label="+">+</button></div>':'<button type="button" class="sh-add" data-inc="'+p.id+'">'+T.add+'</button>')+
         '</div></div></div>'}).join('')+'</div>';
-    var n=count(),need=Math.max(0,(+info.min_items||1)-n);
-    h+='<div class="sh-bar'+(n?'':' sh-bar-empty')+'"><div><b>'+n+' '+T.items+'</b> · <span dir="ltr">'+rm(sub())+'</span><div class="sh-min">'+(need?T.more.replace('{n}',need):T.min.replace('{n}',info.min_items))+'</div></div>'+
+    var n=count(),cq=coffeeQty(),mi=+info.min_items||1,need=cq>0?Math.max(0,mi-cq):0,hasCoffee=products.some(function(p){return p.category==='coffee'});
+    var mtxt=need?T.cmore.replace('{n}',need):(hasCoffee&&(cat==='coffee'||cq>0)?T.cmin.replace('{n}',mi):'');
+    h+='<div class="sh-bar'+(n?'':' sh-bar-empty')+'"><div><b>'+n+' '+T.items+'</b> · <span dir="ltr">'+rm(sub())+'</span>'+(mtxt?'<div class="sh-min">'+mtxt+'</div>':'')+'</div>'+
       '<button class="syc-btn" type="button" id="shGo"'+(need||!n?' disabled':'')+'>'+T.checkout+'</button></div><div id="shCo"></div>';
     root.innerHTML=h;
+    root.querySelectorAll('[data-cat]').forEach(function(b){b.onclick=function(){cat=b.getAttribute('data-cat');render()}});
     root.querySelectorAll('[data-inc]').forEach(function(b){b.onclick=function(){var id=b.getAttribute('data-inc');cart[id]=(cart[id]||0)+1;save();render()}});
     root.querySelectorAll('[data-dec]').forEach(function(b){b.onclick=function(){var id=b.getAttribute('data-dec');cart[id]=Math.max(0,(cart[id]||0)-1);if(!cart[id])delete cart[id];save();render()}});
     var g=$('#shGo');if(g)g.onclick=checkout;
@@ -85,7 +93,7 @@
     async function loadQ(){car='';quotes=[];var cc=$('#shCC').value,cb=$('#shCar');
       if(!cc){cb.innerHTML='';sum();return}
       cb.innerHTML='<p class="ac-muted">'+T.load+'</p>';
-      try{quotes=await rpc('quote',{p_cc:cc,p_kg:kg()})}catch(e){quotes=[]}
+      try{quotes=await rpc('quote_store',{p_cc:cc,p_kg:kg()})}catch(e){try{quotes=await rpc('quote',{p_cc:cc,p_kg:kg()})}catch(e2){quotes=[]}}
       if(!quotes.length){cb.innerHTML='<p class="ac-est">'+T.noship+'</p>';sum();return}
       car=quotes[0].carrier;
       cb.innerHTML=quotes.map(function(q,i){var tr=q['transit_'+L]||q.transit_en||'';return '<label class="rq-opt"><input type="radio" name="shCarR" value="'+esc(q.carrier)+'"'+(i===0?' checked':'')+'><span class="rq-n"><b>'+esc(q['name_'+L]||q.name)+'</b>'+(tr?'<small>'+esc(tr)+'</small>':'')+'</span><span class="rq-p" dir="ltr"><b>'+rm(q.price_rm)+'</b></span></label>'}).join('');

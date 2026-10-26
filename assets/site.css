@@ -431,6 +431,7 @@ select.ac-i{appearance:auto}
 .cl-tabs{display:inline-flex;background:#f3f1f8;border-radius:999px;padding:4px;margin-bottom:14px}
 .cl-tabs button{border:0;background:none;font:inherit;font-weight:700;color:#5d5675;padding:9px 18px;border-radius:999px;cursor:pointer;min-height:40px}
 .cl-tabs button.on{background:#fff;color:#1d1a2e;box-shadow:0 2px 8px rgba(20,16,40,.12)}
+.sh-tabs{display:flex;flex-wrap:wrap;width:fit-content;max-width:100%;margin-bottom:18px}.sh-tabs button{white-space:nowrap}
 .sht-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .sht-card{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:1px solid #ebe9f2;border-radius:18px;padding:12px;text-decoration:none;color:#1d1a2e;font-weight:700;transition:transform .2s,box-shadow .2s}
 .sht-card:hover{transform:translateY(-3px);box-shadow:0 18px 30px -20px rgba(20,16,40,.4)}
