@@ -419,3 +419,5 @@ select.ac-i{appearance:auto}
 .tm-prod-h{display:flex;gap:14px;align-items:center;margin-bottom:8px}.tm-prod-h img,.tm-noimg{width:72px;height:72px;object-fit:contain;border-radius:12px;background:#faf9fc;border:1px solid #ebe9f2;flex:none}.tm-noimg{display:flex;align-items:center;justify-content:center;font-size:11px;color:#8a85a0}
 .sh-bar-empty{display:none}
 @media (max-width:700px){.sh-bar{bottom:84px;padding:12px 14px}.syc-ph-shopx{background-size:auto,cover;background-position:0 0,center}}
+[dir=rtl] .syc-ph-shopx{background-image:linear-gradient(250deg,rgba(22,19,42,.95) 40%,rgba(22,19,42,.7)),url(/assets/img/products/oldtown-classic.webp);background-position:0 0,left 6% center}
+@media (max-width:700px){[dir=rtl] .syc-ph-shopx{background-position:0 0,center}}
