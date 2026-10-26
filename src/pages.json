@@ -208,5 +208,19 @@
    "title": "Polisi pembatalan dan bayaran balik | Ship Your Cart",
    "description": "Bila anda boleh membatalkan penghantaran dan cara bayaran balik di Ship Your Cart."
   }
+ },
+ "shop": {
+  "en": {
+   "title": "Shop from Malaysia | OLDTOWN White Coffee and more | Ship Your Cart",
+   "description": "Buy genuine Malaysian products like OLDTOWN White Coffee online and get them shipped to Saudi Arabia, UAE, Oman, Kuwait, Qatar, Bahrain and worldwide."
+  },
+  "ar": {
+   "title": "تسوّق من ماليزيا | قهوة أولد تاون البيضاء وأكثر | Ship Your Cart",
+   "description": "اشترِ منتجات ماليزية أصلية مثل قهوة أولد تاون البيضاء أونلاين ونوصلها للسعودية والإمارات وعُمان والكويت وقطر والبحرين وكل العالم."
+  },
+  "ms": {
+   "title": "Beli dari Malaysia | OLDTOWN White Coffee dan lain-lain | Ship Your Cart",
+   "description": "Beli produk Malaysia asli seperti OLDTOWN White Coffee dalam talian dan dihantar ke Teluk dan seluruh dunia."
+  }
  }
 }

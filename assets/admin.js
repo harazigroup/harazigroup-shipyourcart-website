@@ -31,10 +31,10 @@
   }
   var view='ships';
   function shell(){
-    root.innerHTML='<div class="tm-tabs"><button data-v="ships">الشحنات</button><button data-v="cust">العملاء</button><button data-v="add">استلام طرد</button><button data-v="rates">الأسعار</button></div><div id="tmBody"></div>';
+    root.innerHTML='<div class="tm-tabs"><button data-v="ships">الشحنات</button><button data-v="cust">العملاء</button><button data-v="add">استلام طرد</button><button data-v="rates">الأسعار</button><button data-v="prod">المتجر</button></div><div id="tmBody"></div>';
     root.querySelectorAll('[data-v]').forEach(function(b){b.onclick=function(){view=b.getAttribute('data-v');go()}});go();
   }
-  function go(){root.querySelectorAll('[data-v]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===view)});({ships:ships,cust:custList,add:addByCode,rates:rates})[view]()}
+  function go(){root.querySelectorAll('[data-v]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===view)});({ships:ships,cust:custList,add:addByCode,rates:rates,prod:prods})[view]()}
   var body=function(){return $('#tmBody')};
 
 
@@ -62,6 +62,34 @@
       var up={active:g('active'),name:g('name')||card.getAttribute('data-cid'),name_ar:g('name_ar')||null,transit_ar:g('transit_ar')||null,transit_en:g('transit_en')||null,
         fuel_pct:+g('fuel_pct')||0,markup_pct:+g('markup_pct')||0,vol_divisor:+g('vol_divisor')||5000,max_kg:+g('max_kg')||70};
       var r=await sb.from('carriers').update(up).eq('id',card.getAttribute('data-cid'));$('[data-cmsg]',card).textContent=r.error?r.error.message:'تم الحفظ ✓';if(!r.error)setTimeout(rates,700)}});
+  }
+
+  /* ---------- shop products ---------- */
+  async function prods(){
+    body().innerHTML='<div class="ac-loading"></div>';
+    var ps=(await sb.from('products').select('*').order('sort').order('id')).data||[];
+    var st=(await sb.from('settings').select('*').in('key',['store_min_items','store_pack_kg'])).data||[],sv=function(k){var x=st.find(function(r){return r.key===k});return x?x.value:''};
+    var f=function(k,l,v,t){return '<div><label class="ac-l">'+l+'</label><input class="ac-i" data-k="'+k+'" value="'+esc(v==null?'':v)+'"'+(t?' type="number" step="0.01" dir="ltr"':'')+'></div>'};
+    var card=function(p){return '<div class="ac-card tm-prod" data-pid="'+(p.id||'')+'"><div class="tm-prod-h">'+(p.photo?'<img src="'+esc(p.photo)+'" alt="">':'<div class="tm-noimg">بدون صورة</div>')+'<div><h3 class="ac-h">'+esc(p.name_ar||p.name_en||'منتج جديد')+'</h3><span class="ac-pill s-'+(p.active?'paid':'cancelled')+'">'+(p.active?'معروض':'مخفي')+'</span></div></div>'+
+      '<label class="tm-chk"><input type="checkbox" data-k="active"'+(p.active?' checked':'')+'> يظهر في المتجر</label>'+
+      '<div class="tm-g4">'+f('name_ar','الاسم عربي',p.name_ar)+f('name_en','الاسم إنجليزي',p.name_en)+f('name_ms','الاسم ماليزي',p.name_ms)+f('brand','الماركة',p.brand)+
+      f('price_rm','سعر البيع RM (للحبة)',p.price_rm,1)+f('weight_kg','الوزن كجم',p.weight_kg,1)+f('sort','الترتيب',p.sort,1)+
+      '<div><label class="ac-l">صورة جديدة</label><input class="ac-i" type="file" accept="image/*" data-photo></div></div>'+
+      f('desc_ar','وصف عربي',p.desc_ar)+f('desc_en','وصف إنجليزي',p.desc_en)+
+      '<div class="ac-btns"><button class="syc-btn" data-psave>حفظ</button><span class="ac-ok" data-pmsg></span></div></div>'};
+    body().innerHTML='<div class="ac-card"><h3 class="ac-h">إعدادات المتجر</h3><div class="tm-g4">'+f('store_min_items','أقل عدد قطع للطلب',sv('store_min_items'),1)+f('store_pack_kg','وزن التغليف كجم',sv('store_pack_kg'),1)+'</div><div class="ac-btns"><button class="syc-btn" id="stSave">حفظ</button><button class="ac-link" id="pNew">+ منتج جديد</button><span class="ac-ok" id="stMsg"></span></div></div><div id="pList">'+ps.map(card).join('')+'</div>';
+    $('#stSave').onclick=async function(){var c=$('#stSave').closest('.ac-card'),e=null;for(var k of ['store_min_items','store_pack_kg']){var r=await sb.from('settings').upsert({key:k,value:+$('[data-k="'+k+'"]',c).value});if(r.error)e=r.error}$('#stMsg').textContent=e?e.message:'تم الحفظ ✓'};
+    $('#pNew').onclick=function(){var d=document.createElement('div');d.innerHTML=card({active:false,weight_kg:0.6,sort:100});$('#pList').prepend(d.firstChild);bind()};
+    function bind(){body().querySelectorAll('.tm-prod').forEach(function(c){var b=$('[data-psave]',c);if(b.dataset.b)return;b.dataset.b=1;b.onclick=async function(){
+      var g=function(k){var x=$('[data-k="'+k+'"]',c);return x.type==='checkbox'?x.checked:x.value.trim()};
+      var up={active:g('active'),name_ar:g('name_ar')||null,name_en:g('name_en'),name_ms:g('name_ms')||null,brand:g('brand')||null,price_rm:g('price_rm')===''?null:+g('price_rm'),weight_kg:+g('weight_kg')||0.5,sort:+g('sort')||0,desc_ar:g('desc_ar')||null,desc_en:g('desc_en')||null};
+      if(!up.name_en){$('[data-pmsg]',c).textContent='اكتب الاسم بالإنجليزي';return}
+      b.disabled=true;var file=$('[data-photo]',c).files[0];
+      if(file){var path='p/'+(crypto.randomUUID?crypto.randomUUID():Date.now())+'.'+((file.name.split('.').pop()||'jpg').toLowerCase());var u=await sb.storage.from('product-photos').upload(path,file,{contentType:file.type,upsert:false});
+        if(u.error){b.disabled=false;$('[data-pmsg]',c).textContent=u.error.message;return}up.photo=sb.storage.from('product-photos').getPublicUrl(path).data.publicUrl}
+      var id=c.getAttribute('data-pid'),r=id?await sb.from('products').update(up).eq('id',+id):await sb.from('products').insert(up);
+      b.disabled=false;$('[data-pmsg]',c).textContent=r.error?r.error.message:'تم الحفظ ✓';if(!r.error)setTimeout(prods,700)}})}
+    bind();
   }
   /* ---------- customers ---------- */
   async function custList(q){
@@ -160,6 +188,7 @@
       '<div class="ac-sh1"><b>شحنة #'+s.id+'</b> · '+fmtD(s.created_at)+' · '+(MT[s.method]||s.method)+' · '+(c.code?'<button class="ac-link" data-open="'+s.customer_id+'">'+esc(c.code)+' — '+esc(c.full_name)+'</button>':'')+'<span class="ac-pill s-'+s.status+'">'+SST[s.status]+'</span></div>'+
       '<div class="ac-sh2">📍 '+esc([s.ship_name,s.ship_phone,s.ship_address,s.ship_city,s.ship_country].filter(Boolean).join(' · '))+'</div>'+
       '<div class="ac-sh2">📦 '+mine.map(function(p){return '#'+p.id+' ('+(p.weight_kg||'?')+' كجم)'}).join('، ')+' — المجموع '+kg.toFixed(2)+' كجم'+(vol?' · حجمي '+vol.toFixed(2):'')+'</div>'+
+      (s.kind&&s.kind!=='parcels'?'<div class="ac-sh2"><b>🛒 طلب متجر — '+(s.kind==='store_wh'?'يتحط في عنوانه في ماليزيا (اشترِ وسجّله كطرد)':'توصيل مباشر')+'</b><br>'+(s.items||[]).map(function(i){return esc(i.name_ar||i.name)+' × '+i.qty+' (RM '+i.price+')'}).join('<br>')+'<br>المنتجات RM '+(s.items_rm||0)+(s.shipping_rm?' + الشحن RM '+s.shipping_rm:'')+'</div>':'')+
       (s.contents?'<div class="ac-sh2">🧾 '+esc(s.contents)+(s.declared_value_rm?' · القيمة المصرّح بها RM '+s.declared_value_rm:'')+'</div>':'')+
       (s.customer_note?'<div class="ac-sh2">💬 '+esc(s.customer_note)+'</div>':'')+
       (s.auto_quoted?'<div class="ac-sh2">⚡ مسعّرة تلقائياً'+(s.carrier?' · '+esc(s.carrier):'')+(s.price_list_rm?' · السعر '+s.price_list_rm+(s.discount_rm?' − خصم أول شحنة '+s.discount_rm:'')+' = RM '+s.price_rm:'')+'</div>':'')+

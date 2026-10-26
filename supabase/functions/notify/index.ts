@@ -112,6 +112,9 @@ async function onParcel(id: number) {
   return [await send(`parcel:${p.id}`, c.email, t[0], layout(l, t[1], t[2] + photos + box(rows[l]) + t[3], { text: t[4], url: accUrl(l) }))];
 }
 
+const itemsHtml = (s: { items?: { name: string; name_ar?: string; qty: number }[] }, ar = false) =>
+  (s.items || []).map((i) => `${esc((ar && i.name_ar) || i.name)} × ${i.qty}`).join("<br>");
+
 async function onShipment(id: number) {
   const { data: s } = await sb.from("shipments").select("*, customers(*)").eq("id", id).single();
   if (!s || !s.customers) return [];
@@ -125,9 +128,9 @@ async function onShipment(id: number) {
       ms: [`Permintaan penghantaran #${s.id} diterima`, "Permintaan diterima", `${T.ms.hi} ${esc(c.full_name)}, kami sedang membungkus bungkusan anda dan akan menghantar berat serta harga akhir.`],
     },
     quoted: {
-      en: [`Shipment #${s.id} is ready: ${rm(s.price_rm)}`, "Your shipment is ready to go", `${T.en.hi} ${esc(c.full_name)}, ${s.auto_quoted ? "here is the price for your shipment." : "your parcels are packed."}` + box([...(s.carrier ? [["Carrier", esc(s.carrier)] as [string, string]] : []), ["Weight", s.weight_kg + " kg"], ...(s.discount_rm ? [["First shipment discount", "−" + rm(s.discount_rm)] as [string, string]] : []), ["Price", rm(s.price_rm)]]) + "Pay securely in your account and we ship right away.", "Pay now"],
-      ar: [`شحنتك #${s.id} جاهزة: ${rm(s.price_rm)}`, "شحنتك جاهزة للشحن", `${T.ar.hi} ${esc(c.full_name)}، ${s.auto_quoted ? "هذا سعر شحنتك." : "جهّزنا طرودك."}` + box([...(s.carrier ? [["الشحن", esc(s.carrier)] as [string, string]] : []), ["الوزن", s.weight_kg + " كجم"], ...(s.discount_rm ? [["خصم أول شحنة", "−" + rm(s.discount_rm)] as [string, string]] : []), ["السعر", rm(s.price_rm)]]) + "ادفع بأمان من حسابك ونشحنها على طول.", "ادفع الحين"],
-      ms: [`Penghantaran #${s.id} sedia: ${rm(s.price_rm)}`, "Penghantaran anda sedia", `${T.ms.hi} ${esc(c.full_name)}, ${s.auto_quoted ? "ini harga penghantaran anda." : "bungkusan anda telah dibungkus."}` + box([...(s.carrier ? [["Penghantar", esc(s.carrier)] as [string, string]] : []), ["Berat", s.weight_kg + " kg"], ...(s.discount_rm ? [["Diskaun penghantaran pertama", "−" + rm(s.discount_rm)] as [string, string]] : []), ["Harga", rm(s.price_rm)]]) + "Bayar dengan selamat dalam akaun anda dan kami terus hantar.", "Bayar sekarang"],
+      en: [`Shipment #${s.id} is ready: ${rm(s.price_rm)}`, "Your shipment is ready to go", `${T.en.hi} ${esc(c.full_name)}, ${s.auto_quoted ? "here is the price for your shipment." : "your parcels are packed."}` + box([...(s.items ? [["Items", itemsHtml(s, false)] as [string, string]] : []), ...(s.carrier ? [["Carrier", esc(s.carrier)] as [string, string]] : []), ["Weight", s.weight_kg + " kg"], ...(s.discount_rm ? [["First shipment discount", "−" + rm(s.discount_rm)] as [string, string]] : []), ["Price", rm(s.price_rm)]]) + "Pay securely in your account and we ship right away.", "Pay now"],
+      ar: [`شحنتك #${s.id} جاهزة: ${rm(s.price_rm)}`, "شحنتك جاهزة للشحن", `${T.ar.hi} ${esc(c.full_name)}، ${s.auto_quoted ? "هذا سعر شحنتك." : "جهّزنا طرودك."}` + box([...(s.items ? [["المنتجات", itemsHtml(s, true)] as [string, string]] : []), ...(s.carrier ? [["الشحن", esc(s.carrier)] as [string, string]] : []), ["الوزن", s.weight_kg + " كجم"], ...(s.discount_rm ? [["خصم أول شحنة", "−" + rm(s.discount_rm)] as [string, string]] : []), ["السعر", rm(s.price_rm)]]) + "ادفع بأمان من حسابك ونشحنها على طول.", "ادفع الحين"],
+      ms: [`Penghantaran #${s.id} sedia: ${rm(s.price_rm)}`, "Penghantaran anda sedia", `${T.ms.hi} ${esc(c.full_name)}, ${s.auto_quoted ? "ini harga penghantaran anda." : "bungkusan anda telah dibungkus."}` + box([...(s.items ? [["Produk", itemsHtml(s, false)] as [string, string]] : []), ...(s.carrier ? [["Penghantar", esc(s.carrier)] as [string, string]] : []), ["Berat", s.weight_kg + " kg"], ...(s.discount_rm ? [["Diskaun penghantaran pertama", "−" + rm(s.discount_rm)] as [string, string]] : []), ["Harga", rm(s.price_rm)]]) + "Bayar dengan selamat dalam akaun anda dan kami terus hantar.", "Bayar sekarang"],
     },
     paid: {
       en: [`Payment received for shipment #${s.id}`, "Thank you, payment received", `${T.en.hi} ${esc(c.full_name)}, we received ${rm(s.price_rm)} for shipment #${s.id}. We will send the tracking number once it ships.`],
@@ -155,6 +158,7 @@ async function onShipment(id: number) {
         ["المستلم", esc([s.ship_name, s.ship_phone, s.ship_address, s.ship_city, s.ship_country].filter(Boolean).join("، "))],
         ["الطرود", (ps || []).map((p) => `#${p.id} (${p.weight_kg ?? "?"} كجم)`).join("، ")],
         ...(s.price_rm ? [["المبلغ", rm(s.price_rm)] as [string, string]] : []),
+        ...(s.items ? [["طلب متجر", (s.kind === "store_wh" ? "يتحط في عنوانه في ماليزيا<br>" : "توصيل مباشر<br>") + itemsHtml(s, true)] as [string, string]] : []),
         ...(s.contents ? [["المحتويات", esc(s.contents)] as [string, string]] : []),
         ...(s.declared_value_rm ? [["القيمة المصرّح بها", rm(s.declared_value_rm)] as [string, string]] : []),
         ...(s.customer_note ? [["ملاحظة العميل", esc(s.customer_note)] as [string, string]] : []),

@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
       "line_items[0][quantity]": "1",
       "line_items[0][price_data][currency]": "myr",
       "line_items[0][price_data][unit_amount]": String(Math.round(Number(s.price_rm) * 100)),
-      "line_items[0][price_data][product_data][name]": `Shipment #${s.id} — ${s.customers.code}`,
+      "line_items[0][price_data][product_data][name]": `${String(s.kind || "").startsWith("store") ? "Order" : "Shipment"} #${s.id} — ${s.customers.code}`,
       customer_email: s.customers.email,
       "metadata[shipment_id]": String(s.id),
       "metadata[customer_code]": s.customers.code,

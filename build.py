@@ -14,7 +14,7 @@ SRC = os.path.join(ROOT, 'src')
 OUT = os.path.join(ROOT, 'public')
 SITE = 'https://shipyourcart.com.my'
 LANGS = [('en', '', 'en', 'ltr', 'EN'), ('ar', '/ar', 'ar', 'rtl', 'عربي'), ('ms', '/ms-my', 'ms-MY', 'ltr', 'BM')]
-PAGES = ['home', 'shipping', 'shop-and-ship', 'buy-for-me', 'sourcing', 'amazon-fba-prep', 'how-it-works',
+PAGES = ['home', 'shop', 'shipping', 'shop-and-ship', 'buy-for-me', 'sourcing', 'amazon-fba-prep', 'how-it-works',
          'pricing', 'about', 'faq', 'contact', 'prohibited-items', 'shipping-policy', 'refund-policy', 'account']
 NOINDEX = {'account'}
 META = json.load(open(os.path.join(SRC, 'pages.json'), encoding='utf-8'))
@@ -97,6 +97,7 @@ def build_page(slug, lang, prefix, hl, d):
     body = body.replace('{{signup_form}}', '<div id="syc-signup" class="ac-embed"></div>')
     body = body.replace('{{calc}}', '<div id="syc-calc" class="cl"></div>')
     body = body.replace('{{track}}', '<div id="syc-track"></div>')
+    body = body.replace('{{shop}}', '<div id="syc-shop"></div>')
     page = head(slug, lang, prefix, hl, d) + body + WA + lang_switch(slug, lang)
     page += '\n<script>window.SYC={url:"%s",key:"%s",lang:"%s",prefix:"%s",stripePk:"%s"};</script>' % (SUPABASE_URL, SUPABASE_KEY, lang, prefix, STRIPE_PK)
     page += '\n<script src="/assets/site.js?v=%s" defer></script>' % VER
@@ -104,6 +105,8 @@ def build_page(slug, lang, prefix, hl, d):
         page += '\n<script src="/assets/track.js?v=%s" defer></script>' % VER
     if 'id="syc-calc"' in body:
         page += '\n<script src="/assets/calc.js?v=%s" defer></script>' % VER
+    if slug == 'shop':
+        page += '\n<script src="%s" defer></script>\n<script src="/assets/shop.js?v=%s" defer></script>' % (SUPABASE_JS, VER)
     if slug in ('account', 'shop-and-ship'):
         if slug == 'account' and STRIPE_PK:
             page += '\n<script src="https://js.stripe.com/v3/"></script>'
