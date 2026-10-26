@@ -64,7 +64,7 @@ def head(slug, lang, prefix, hl, d):
 {robots}<link rel="canonical" href="{url}">{alts}
 <meta property="og:type" content="website"><meta property="og:site_name" content="Ship Your Cart">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/img/og.jpg">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/img/og-logo.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Ship Your Cart">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#7a4fd0"><meta name="color-scheme" content="only light">
 <link rel="icon" type="image/png" sizes="512x512" href="/assets/img/icon-512.png">
