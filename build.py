@@ -54,6 +54,9 @@ def head(slug, lang, prefix, hl, d):
                    for _, p, h, _, _ in LANGS)
     alts += '<link rel="alternate" hreflang="x-default" href="%s%s">' % (SITE, path_of(slug, ''))
     robots = '<meta name="robots" content="noindex">' if slug in NOINDEX else ''
+    return head_raw(title, desc, url, alts, robots, slug, hl, d)
+
+def head_raw(title, desc, url, alts, robots, slug, hl, d, img='/assets/img/og-logo.jpg', ogtype='website', extra=''):
     return f'''<!doctype html>
 <html lang="{hl}" dir="{d}">
 <head>
@@ -62,16 +65,16 @@ def head(slug, lang, prefix, hl, d):
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
 {robots}<link rel="canonical" href="{url}">{alts}
-<meta property="og:type" content="website"><meta property="og:site_name" content="Ship Your Cart">
+<meta property="og:type" content="{ogtype}"><meta property="og:site_name" content="Ship Your Cart">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/assets/img/og-logo.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Ship Your Cart">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}{img}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Ship Your Cart">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#7a4fd0"><meta name="color-scheme" content="only light">
 <link rel="icon" type="image/png" sizes="512x512" href="/assets/img/icon-512.png">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v={VER}">
+<link rel="stylesheet" href="/assets/site.css?v={VER}">{extra}
 </head>
 <body class="pg-{slug}">
 '''
@@ -85,9 +88,12 @@ WA = ('<a class="syc-wa" href="https://wa.me/60107070190" target="_blank" rel="n
       '<svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg></a>')
 
 def build_page(slug, lang, prefix, hl, d):
-    body = read('pages', '%s.%s.html' % (slug, lang))
+    body = fill(read('pages', '%s.%s.html' % (slug, lang)), lang, prefix)
+    page = head(slug, lang, prefix, hl, d) + body + WA + lang_switch(slug, lang)
+    finish(page, body, slug, lang, prefix, os.path.join(OUT, path_of(slug, prefix).lstrip('/'), 'index.html'))
+
+def fill(body, lang, prefix):
     nav = read('partials', 'nav.%s.html' % lang)
-    # header button -> account page
     nav = re.sub(r'<a class="syc-hbtn"[^>]*>.*?</a>',
                  '<a class="syc-hbtn" href="%s/account/" data-acct>%s</a>' % (prefix, UI[lang]['acct']), nav, flags=re.S)
     nav = nav.replace('<header class="syc-hdr">', '<header class="syc-hdr" id="top">', 1)
@@ -98,7 +104,9 @@ def build_page(slug, lang, prefix, hl, d):
     body = body.replace('{{calc}}', '<div id="syc-calc" class="cl"></div>')
     body = body.replace('{{track}}', '<div id="syc-track"></div>')
     body = body.replace('{{shop}}', '<div id="syc-shop"></div>')
-    page = head(slug, lang, prefix, hl, d) + body + WA + lang_switch(slug, lang)
+    return body
+
+def finish(page, body, slug, lang, prefix, out):
     page += '\n<script>window.SYC={url:"%s",key:"%s",lang:"%s",prefix:"%s",stripePk:"%s"};</script>' % (SUPABASE_URL, SUPABASE_KEY, lang, prefix, STRIPE_PK)
     page += '\n<script src="/assets/site.js?v=%s" defer></script>' % VER
     if 'id="syc-track"' in body:
@@ -112,10 +120,86 @@ def build_page(slug, lang, prefix, hl, d):
             page += '\n<script src="https://js.stripe.com/v3/"></script>'
         page += '\n<script src="%s" defer></script>\n<script src="/assets/account.js?v=%s" defer></script>' % (SUPABASE_JS, VER)
     page += '\n</body>\n</html>\n'
-    out = os.path.join(OUT, path_of(slug, prefix).lstrip('/'), 'index.html')
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, 'w', encoding='utf-8').write(page)
 
+
+
+# ---------- blog: src/blog/posts.json + src/blog/<slug>.<ar|en>.html ----------
+BLOG = json.load(open(os.path.join(SRC, 'blog', 'posts.json'), encoding='utf-8'))
+BLOG_UI = {
+ 'en': {'blog': 'Blog', 'h': 'Shipping from Malaysia, made simple', 'p': 'Guides and tips for shopping in Malaysia and shipping to your door.',
+        'more': 'Read more', 'back': 'All articles', 'read': 'read', 'related': 'More articles', 'title': 'Blog | Ship Your Cart',
+        'desc': 'Guides and tips for shopping from Malaysia and shipping to the GCC and the world.', 'note': ''},
+ 'ar': {'blog': 'المدونة', 'h': 'الشحن من ماليزيا ببساطة', 'p': 'أدلة ونصائح للتسوّق من ماليزيا وشحن طلباتك لباب بيتك.',
+        'more': 'اقرأ المزيد', 'back': 'كل المقالات', 'read': 'قراءة', 'related': 'مقالات ثانية', 'title': 'المدونة | Ship Your Cart',
+        'desc': 'أدلة ونصائح للتسوّق من ماليزيا والشحن إلى الخليج والعالم.', 'note': ''},
+ 'ms': {'blog': 'Blog', 'h': 'Penghantaran dari Malaysia, mudah', 'p': 'Panduan dan tips membeli-belah di Malaysia dan menghantar ke pintu anda.',
+        'more': 'Baca lagi', 'back': 'Semua artikel', 'read': 'bacaan', 'related': 'Artikel lain', 'title': 'Blog | Ship Your Cart',
+        'desc': 'Panduan dan tips membeli-belah dari Malaysia dan menghantar ke seluruh dunia.', 'note': 'Artikel kami tersedia dalam bahasa Inggeris dan Arab.'},
+}
+BLOG_LANGS = ('en', 'ar')
+
+def blog_date(iso, lang):
+    y, m, dd = iso.split('-')
+    months = {'en': 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(),
+              'ar': 'يناير فبراير مارس أبريل مايو يونيو يوليو أغسطس سبتمبر أكتوبر نوفمبر ديسمبر'.split(),
+              'ms': 'Jan Feb Mac Apr Mei Jun Jul Ogo Sep Okt Nov Dis'.split()}[lang]
+    return '%d %s %s' % (int(dd), months[int(m) - 1], y)
+
+def blog_switch(paths, lang):
+    return '<nav class="syc-lang" aria-label="Language">' + ''.join(
+        '<a href="%s" hreflang="%s"%s>%s</a>' % (paths[l], h, ' class="on"' if l == lang else '', lab)
+        for l, p, h, _, lab in LANGS) + '</nav>'
+
+def blog_card(b, lang, prefix):
+    tl = lang if lang in BLOG_LANGS else 'en'
+    pre = prefix if lang in BLOG_LANGS else ''
+    m = b[tl]
+    return ('<a class="bl-card" href="%s/blog/%s/"%s><img src="%s" alt="" loading="lazy" width="1200" height="630"><div class="bl-cb">'
+            '<div class="bl-meta">%s · %s %s</div><h3>%s</h3><p>%s</p><span class="bl-more">%s</span></div></a>') % (
+            pre, b['slug'], '' if tl == lang else ' lang="en" dir="ltr"', b['img'], blog_date(b['date'], tl), m['read'], BLOG_UI[tl]['read'],
+            esc(m['title']), esc(m['desc']), BLOG_UI[lang]['more'])
+
+def build_blog():
+    posts = sorted(BLOG, key=lambda b: b['date'], reverse=True)
+    for lang, prefix, hl, d, _ in LANGS:
+        u = BLOG_UI[lang]
+        paths = {l: p + '/blog/' for l, p, _, _, _ in LANGS}
+        alts = ''.join('<link rel="alternate" hreflang="%s" href="%s%s">' % (h, SITE, p + '/blog/') for _, p, h, _, _ in LANGS)
+        body = ('{{nav}}<section class="syc-ph syc-ph-blog"><div class="syc-ph-in"><div class="syc-pill">%s</div><h1 class="syc-ph-h">%s</h1>'
+                '<p class="syc-ph-p">%s</p></div></section><section class="syc-sec"><div class="syc-wrap">%s<div class="bl-grid">%s</div></div></section>{{cta}}{{footer}}') % (
+                u['blog'], u['h'], u['p'], ('<p class="bl-note">%s</p>' % u['note']) if u['note'] else '', ''.join(blog_card(b, lang, prefix) for b in posts))
+        body = fill(body, lang, prefix)
+        page = head_raw(u['title'], u['desc'], SITE + prefix + '/blog/', alts, '', 'blog', hl, d) + body + WA + blog_switch(paths, lang)
+        finish(page, body, 'blog', lang, prefix, os.path.join(OUT, (prefix + '/blog/').lstrip('/'), 'index.html'))
+    for b in posts:
+        for lang, prefix, hl, d, _ in LANGS:
+            if lang not in BLOG_LANGS:
+                continue
+            u, m = BLOG_UI[lang], b[lang]
+            url = SITE + prefix + '/blog/%s/' % b['slug']
+            paths = {l: (p if l in BLOG_LANGS else '') + '/blog/%s/' % b['slug'] for l, p, _, _, _ in LANGS}
+            alts = ''.join('<link rel="alternate" hreflang="%s" href="%s%s">' % (h, SITE, p + '/blog/%s/' % b['slug'])
+                           for l, p, h, _, _ in LANGS if l in BLOG_LANGS)
+            alts += '<link rel="alternate" hreflang="x-default" href="%s/blog/%s/">' % (SITE, b['slug'])
+            ld = json.dumps({'@context': 'https://schema.org', '@type': 'BlogPosting', 'headline': m['title'], 'description': m['desc'],
+                             'image': SITE + b['img'], 'datePublished': b['date'], 'dateModified': b.get('updated', b['date']), 'inLanguage': hl,
+                             'mainEntityOfPage': url, 'author': {'@type': 'Organization', 'name': 'Ship Your Cart'},
+                             'publisher': {'@type': 'Organization', 'name': 'Ship Your Cart', 'logo': {'@type': 'ImageObject', 'url': SITE + '/assets/img/icon-512.png'}}},
+                            ensure_ascii=False)
+            extra = '\n<script type="application/ld+json">%s</script>' % ld.replace('</', '<\\/')
+            others = [x for x in posts if x['slug'] != b['slug']][:2]
+            body = ('{{nav}}<article class="bl-post"><header class="bl-hero"><div class="bl-wrap"><a class="bl-back" href="%s/blog/">%s %s</a>'
+                    '<h1>%s</h1><div class="bl-meta">%s · %s %s</div></div></header>'
+                    '<div class="bl-wrap"><img class="bl-cover" src="%s" alt="%s" width="1200" height="630"><div class="bl-art">%s</div></div></article>'
+                    '<section class="syc-sec syc-sec-soft"><div class="syc-wrap"><h2 class="syc-h2">%s</h2><div class="bl-grid bl-grid-2">%s</div></div></section>{{cta}}{{footer}}') % (
+                    prefix, '→' if d == 'rtl' else '←', u['back'], esc(m['title']), blog_date(b['date'], lang), m['read'], u['read'],
+                    b['img'], esc(m['title']), read('blog', '%s.%s.html' % (b['slug'], lang)),
+                    u['related'], ''.join(blog_card(x, lang, prefix) for x in others))
+            body = fill(body, lang, prefix)
+            page = head_raw(m['title'] + ' | Ship Your Cart', m['desc'], url, alts, '', 'blog-post', hl, d, b['img'], 'article', extra) + body + WA + blog_switch(paths, lang)
+            finish(page, body, 'blog-post', lang, prefix, os.path.join(OUT, (prefix + '/blog/%s/' % b['slug']).lstrip('/'), 'index.html'))
 
 # digital business cards: /card/<slug>/ (+ contact.vcf)
 CARDS = [
@@ -195,6 +279,7 @@ def main():
     os.makedirs(os.path.join(OUT, 'admin'))
     open(os.path.join(OUT, 'admin', 'index.html'), 'w', encoding='utf-8').write(a)
     build_cards()
+    build_blog()
     # 404
     n = read('404.html')
     open(os.path.join(OUT, '404.html'), 'w', encoding='utf-8').write(n)
@@ -205,6 +290,12 @@ def main():
             continue
         for _, p, _, _, _ in LANGS:
             urls.append('<url><loc>%s%s</loc><lastmod>%s</lastmod></url>' % (SITE, path_of(slug, p), date.today().isoformat()))
+    for _, p, _, _, _ in LANGS:
+        urls.append('<url><loc>%s%s/blog/</loc><lastmod>%s</lastmod></url>' % (SITE, p, max(b.get('updated', b['date']) for b in BLOG)))
+    for b in BLOG:
+        for l, p, _, _, _ in LANGS:
+            if l in BLOG_LANGS:
+                urls.append('<url><loc>%s%s/blog/%s/</loc><lastmod>%s</lastmod></url>' % (SITE, p, b['slug'], b.get('updated', b['date'])))
     open(os.path.join(OUT, 'sitemap.xml'), 'w').write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + '\n'.join(urls) + '\n</urlset>\n')
