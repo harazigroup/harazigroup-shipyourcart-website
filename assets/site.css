@@ -483,3 +483,8 @@ select.ac-i{appearance:auto}
 @media (min-width:992px){.syc-mi{white-space:nowrap}}
 @media (min-width:992px) and (max-width:1320px){.syc-mi{padding-left:9px;padding-right:9px;font-size:15px}.syc-hdr .syc-hbtn{padding-left:16px;padding-right:16px}}
 @media (min-width:992px) and (max-width:1120px){.syc-mi{padding-left:5px;padding-right:5px;font-size:13.5px}.syc-hdr .syc-hbtn{padding-left:12px;padding-right:12px;font-size:14px}.syc-hdr-in{padding-left:16px;padding-right:16px}}
+.syc-fee{text-align:start}.syc-fee-k{font-weight:800;color:#7a4fd0;font-size:18px;margin-bottom:6px}.syc-box-dark .syc-fee-k{color:#ffb071}
+.syc-fee-v{font-size:64px;font-weight:900;line-height:1.05;color:#1c1140;margin-bottom:10px}.syc-box-dark .syc-fee-v{color:#fff}.syc-box-dark.syc-fee .syc-p{color:#d9d2f5}
+[dir=rtl] .syc-fee-v{text-align:right}
+.syc-fee-ex{margin:22px auto 0;max-width:820px;text-align:center;background:#fff4ea;border:1px solid #ffd9b8;border-radius:18px;padding:16px 20px;font-size:17px;line-height:1.7;color:#3a2f63}
+@media (max-width:640px){.syc-fee-v{font-size:52px}.bl-table table{min-width:0;font-size:15px}.bl-table th,.bl-table td{padding:10px 8px}}
