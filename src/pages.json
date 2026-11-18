@@ -222,5 +222,19 @@
    "title": "Beli dari Malaysia | OLDTOWN White Coffee dan lain-lain | Ship Your Cart",
    "description": "Beli produk Malaysia asli seperti OLDTOWN White Coffee dalam talian dan dihantar ke Teluk dan seluruh dunia."
   }
+ },
+ "careers": {
+  "en": {
+   "title": "Careers | Ship Your Cart",
+   "description": "Remote jobs in Malaysia at Ship Your Cart: product sourcing, international marketing and public relations. Open to Malaysians."
+  },
+  "ar": {
+   "title": "الوظائف | Ship Your Cart",
+   "description": "وظائف عن بُعد في ماليزيا مع Ship Your Cart: توريد المنتجات، والتسويق للأسواق الخارجية، والعلاقات العامة."
+  },
+  "ms": {
+   "title": "Kerjaya | Ship Your Cart",
+   "description": "Kerja jarak jauh di Malaysia bersama Ship Your Cart: sumber produk, pemasaran antarabangsa dan perhubungan awam. Terbuka kepada rakyat Malaysia."
+  }
  }
 }

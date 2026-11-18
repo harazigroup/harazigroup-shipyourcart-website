@@ -488,3 +488,19 @@ select.ac-i{appearance:auto}
 [dir=rtl] .syc-fee-v{text-align:right}
 .syc-fee-ex{margin:22px auto 0;max-width:820px;text-align:center;background:#fff4ea;border:1px solid #ffd9b8;border-radius:18px;padding:16px 20px;font-size:17px;line-height:1.7;color:#3a2f63}
 @media (max-width:640px){.syc-fee-v{font-size:52px}.bl-table table{min-width:0;font-size:15px}.bl-table th,.bl-table td{padding:10px 8px}}
+
+/* careers */
+.syc-ph-careers{background-image:linear-gradient(135deg,#2b1a5e 0%,#4a2fa0 60%,#7a4fd0 100%)}
+.syc-why{grid-template-columns:repeat(4,1fr)}
+.syc-jobs{display:grid;gap:22px}
+.syc-job{background:#fff;border:1px solid #e9e2fb;border-radius:26px;padding:36px 40px;scroll-margin-top:100px}
+.syc-job-h{margin:0;color:#1c1140;font-size:28px;font-weight:800;line-height:1.2}
+.syc-job-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.syc-job-tag{background:#f1ebff;color:#5b3bb8;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700}
+.syc-job-cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:26px}
+.syc-job-k{margin:0 0 6px;color:#7a4fd0;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+html[dir="rtl"] .syc-job-k{letter-spacing:0}
+.syc-job-act{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:28px;padding-top:24px;border-top:1px solid #eee9fb}
+.syc-job-or{color:#5a5275;font-size:15px}.syc-job-or a{color:#7a4fd0;font-weight:700;text-decoration:none}
+@media (max-width:991px){.syc-why{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.syc-why{grid-template-columns:1fr}.syc-job{padding:26px 22px}.syc-job-cols{grid-template-columns:1fr;gap:18px}.syc-job-h{font-size:23px}}

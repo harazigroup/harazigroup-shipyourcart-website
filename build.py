@@ -15,7 +15,7 @@ OUT = os.path.join(ROOT, 'public')
 SITE = 'https://shipyourcart.com.my'
 LANGS = [('en', '', 'en', 'ltr', 'EN'), ('ar', '/ar', 'ar', 'rtl', 'عربي'), ('ms', '/ms-my', 'ms-MY', 'ltr', 'BM')]
 PAGES = ['home', 'shop', 'shipping', 'shop-and-ship', 'buy-for-me', 'sourcing', 'amazon-fba-prep', 'how-it-works',
-         'pricing', 'about', 'faq', 'contact', 'prohibited-items', 'shipping-policy', 'refund-policy', 'account']
+         'pricing', 'about', 'careers', 'faq', 'contact', 'prohibited-items', 'shipping-policy', 'refund-policy', 'account']
 NOINDEX = {'account'}
 META = json.load(open(os.path.join(SRC, 'pages.json'), encoding='utf-8'))
 SUPABASE_URL = 'https://lmwpilpcuxyzpygylclq.supabase.co'
